@@ -31,14 +31,14 @@
       <div v-else class="grid grid-cols-1 gap-8 md:grid-cols-2">
         <!-- Prayers for Unbelievers -->
         <PrayerList 
-          title="Prayers for Unbelievers"
+          title="Unbelievers"
           category="unbelievers"
           color="indigo"
         />
 
         <!-- Prayers for Brethren -->
         <PrayerList 
-          title="Prayers for Brethren"
+          title="Brethren in hardship"
           category="brethren"
           color="purple"
         />
