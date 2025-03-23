@@ -38,7 +38,7 @@
 
         <!-- Prayers for Brethren -->
         <PrayerList 
-          title="Brethren in hardship"
+          title="Brethren"
           category="brethren"
           color="purple"
         />
