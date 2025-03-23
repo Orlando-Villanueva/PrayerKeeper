@@ -43,6 +43,12 @@
           color="purple"
         />
       </div>
+      
+      <!-- Bible Verse -->
+      <BibleVerse
+        text="Brethren, pray for us."
+        reference="1 Thessalonians 5:25"
+      />
     </main>
 
     <!-- Prayer Modal Component -->
@@ -61,6 +67,7 @@ import { usePrayerStore } from '../stores/prayerStore';
 import NavBar from './navbar/NavBar.vue';
 import PrayerList from './prayer/PrayerList.vue';
 import PrayerModal from './prayer/PrayerModal.vue';
+import BibleVerse from './ui/BibleVerse.vue';
 
 // Initialize stores
 const prayerStore = usePrayerStore();
