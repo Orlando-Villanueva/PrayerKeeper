@@ -1,12 +1,12 @@
 <template>
   <div class="bg-white shadow rounded-lg overflow-hidden">
-    <div class="px-4 py-5 sm:px-6" :class="headerBgClass">
+    <div class="px-4 py-5 sm:px-6" :class="headerClass">
       <div class="flex justify-between items-center">
         <h2 class="text-lg font-medium text-gray-900">{{ title }}</h2>
         <button 
           @click="openAddModal" 
           class="px-3 py-1 rounded-md text-sm font-medium text-white"
-          :class="buttonBgClass"
+          :class="buttonClass"
         >
           Add Prayer
         </button>
@@ -94,8 +94,15 @@ const prayers = computed(() =>
   props.category === 'unbelievers' ? prayerStore.unbelievers : prayerStore.brethren
 );
 
-const headerBgClass = computed(() => `bg-${props.color}-50`);
-const buttonBgClass = computed(() => `bg-${props.color}-600 hover:bg-${props.color}-700 focus:ring-${props.color}-500`);
+const headerClass = computed(() => {
+  if (props.color === 'purple') return 'bg-purple-50';
+  return 'bg-indigo-50'; // Default to indigo
+});
+
+const buttonClass = computed(() => {
+  if (props.color === 'purple') return 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500';
+  return 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'; // Default to indigo
+});
 
 // Functions that interact with the modal
 const openAddModal = () => {
