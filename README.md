@@ -2,6 +2,9 @@
 
 A Vue.js application for managing prayer times and requests.
 
+![image](https://github.com/user-attachments/assets/ce29a69c-b7d1-4db8-9a56-a97a66f2a3d5)
+
+
 ## Features
 
 - User authentication via Supabase
