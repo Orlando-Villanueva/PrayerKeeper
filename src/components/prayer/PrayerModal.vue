@@ -15,6 +15,27 @@
               <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
                 {{ isEditMode ? 'Edit Prayer' : 'Add New Prayer' }}
               </h3>
+              
+              <!-- Category Tabs (Only shown in Add mode) -->
+              <div v-if="!isEditMode" class="mt-4 border-b border-gray-200">
+                <div class="flex">
+                  <button 
+                    @click="prayer.category = 'unbelievers'" 
+                    class="flex-1 text-center py-2 font-medium transition" 
+                    :class="prayer.category === 'unbelievers' ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-500 border-b-2 border-transparent hover:text-purple-600 hover:border-purple-600'"
+                  >
+                    Unbelievers
+                  </button>
+                  <button 
+                    @click="prayer.category = 'brethren'"
+                    class="flex-1 text-center py-2 font-medium transition"
+                    :class="prayer.category === 'brethren' ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-500 border-b-2 border-transparent hover:text-purple-600 hover:border-purple-600'"
+                  >
+                    Brethren
+                  </button>
+                </div>
+              </div>
+              
               <div class="mt-4">
                 <form @submit.prevent="savePrayer">
                   <BaseInput
