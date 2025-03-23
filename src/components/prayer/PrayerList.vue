@@ -34,7 +34,7 @@
               <button 
                 @click="prayerActions.toggleResolved(prayer)" 
                 class="p-1 rounded-full text-gray-400 hover:text-green-500 focus:outline-none"
-                :title="prayer.resolved ? 'Mark as unresolved' : 'Mark as resolved'"
+                :title="prayer.resolved ? (category === 'unbelievers' ? 'Mark as not converted' : 'Mark as unresolved') : (category === 'unbelievers' ? 'Mark as converted' : 'Mark as resolved')"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
