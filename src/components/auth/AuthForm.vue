@@ -83,7 +83,7 @@
 
 <script setup>
 import { computed, watch } from 'vue';
-import { useAuthStore } from '../stores/authStore';
+import { useAuthStore } from '../../stores/authStore';
 
 const authStore = useAuthStore();
 

@@ -1,12 +1,12 @@
 <template>
   <div class="bg-white shadow rounded-lg overflow-hidden">
-    <div class="px-4 py-5 sm:px-6" :class="headerClass">
+    <div class="px-4 py-5 sm:px-6" :class="headerBgClass">
       <div class="flex justify-between items-center">
         <h2 class="text-lg font-medium text-gray-900">{{ title }}</h2>
         <button 
           @click="openAddModal" 
           class="px-3 py-1 rounded-md text-sm font-medium text-white"
-          :class="buttonClass"
+          :class="buttonBgClass"
         >
           Add Prayer
         </button>
@@ -32,7 +32,7 @@
             </div>
             <div class="flex space-x-2">
               <button 
-                @click="toggleResolved(prayer)" 
+                @click="prayerActions.toggleResolved(prayer)" 
                 class="p-1 rounded-full text-gray-400 hover:text-green-500 focus:outline-none"
                 :title="prayer.resolved ? 'Mark as unresolved' : 'Mark as resolved'"
               >
@@ -50,7 +50,7 @@
                 </svg>
               </button>
               <button 
-                @click="deletePrayer(prayer)" 
+                @click="prayerActions.deletePrayer(prayer)" 
                 class="p-1 rounded-full text-gray-400 hover:text-red-500 focus:outline-none"
                 title="Delete prayer"
               >
@@ -68,7 +68,7 @@
 
 <script setup>
 import { computed, inject } from 'vue';
-import { usePrayerStore } from '../stores/prayerStore';
+import { usePrayerStore } from '../../stores/prayerStore';
 
 const props = defineProps({
   title: {
@@ -87,35 +87,15 @@ const props = defineProps({
 
 const prayerStore = usePrayerStore();
 const modalFunctions = inject('modalFunctions');
+const prayerActions = inject('prayerActions');
 
 // Get appropriate prayers based on category
 const prayers = computed(() => 
   props.category === 'unbelievers' ? prayerStore.unbelievers : prayerStore.brethren
 );
 
-// Replace dynamic classes with computed properties that return static classes
-const headerClass = computed(() => {
-  if (props.color === 'purple') return 'bg-purple-50';
-  return 'bg-indigo-50'; // Default to indigo
-});
-
-const buttonClass = computed(() => {
-  if (props.color === 'purple') return 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500';
-  return 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'; // Default to indigo
-});
-
-// Functions that interact with the store
-const toggleResolved = async (prayer) => {
-  // Don't await the promise to avoid loading state
-  prayerStore.resolvePrayer(prayer.id, !prayer.resolved);
-};
-
-const deletePrayer = async (prayer) => {
-  if (confirm('Are you sure you want to delete this prayer?')) {
-    // Don't await to avoid loading state
-    prayerStore.deletePrayer(prayer.id);
-  }
-};
+const headerBgClass = computed(() => `bg-${props.color}-50`);
+const buttonBgClass = computed(() => `bg-${props.color}-600 hover:bg-${props.color}-700 focus:ring-${props.color}-500`);
 
 // Functions that interact with the modal
 const openAddModal = () => {

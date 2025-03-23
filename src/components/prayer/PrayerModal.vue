@@ -65,7 +65,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { usePrayerStore } from '../stores/prayerStore';
+import { usePrayerStore } from '../../stores/prayerStore';
 
 const props = defineProps({
   modelValue: Boolean,

@@ -58,9 +58,9 @@
 <script setup>
 import { ref, provide, onMounted } from 'vue';
 import { usePrayerStore } from '../stores/prayerStore';
-import NavBar from './NavBar.vue';
-import PrayerList from './PrayerList.vue';
-import PrayerModal from './PrayerModal.vue';
+import NavBar from './navbar/NavBar.vue';
+import PrayerList from './prayer/PrayerList.vue';
+import PrayerModal from './prayer/PrayerModal.vue';
 
 // Initialize stores
 const prayerStore = usePrayerStore();
@@ -109,10 +109,30 @@ const savePrayer = async (prayerData) => {
   isModalVisible.value = false;
 };
 
+// Toggle prayer resolved status
+const toggleResolved = async (prayer) => {
+  // Don't await the promise to avoid loading state
+  prayerStore.resolvePrayer(prayer.id, !prayer.resolved);
+};
+
+// Delete a prayer
+const deletePrayer = async (prayer) => {
+  if (confirm('Are you sure you want to delete this prayer?')) {
+    // Don't await to avoid loading state
+    prayerStore.deletePrayer(prayer.id);
+  }
+};
+
 // Provide modal functions to child components
 provide('modalFunctions', {
   openAddModal,
   openEditModal
+});
+
+// Provide prayer action functions to child components
+provide('prayerActions', {
+  toggleResolved,
+  deletePrayer
 });
 
 // Fetch prayers when component mounts
