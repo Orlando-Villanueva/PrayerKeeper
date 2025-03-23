@@ -1,15 +1,15 @@
 <template>
   <div class="bg-white shadow rounded-lg overflow-hidden">
-    <div class="px-4 py-5 sm:px-6" :class="headerClass">
+    <div class="px-4 py-5 sm:px-6" :class="headerBgClass">
       <div class="flex justify-between items-center">
         <h2 class="text-lg font-medium text-gray-900">{{ title }}</h2>
-        <button 
+        <BaseButton 
           @click="openAddModal" 
-          class="px-3 py-1 rounded-md text-sm font-medium text-white"
-          :class="buttonClass"
+          variant="primary"
+          :class="buttonBgClass"
         >
           Add Prayer
-        </button>
+        </BaseButton>
       </div>
     </div>
     <div class="px-4 py-2">
@@ -69,6 +69,7 @@
 <script setup>
 import { computed, inject } from 'vue';
 import { usePrayerStore } from '../../stores/prayerStore';
+import BaseButton from '../ui/BaseButton.vue';
 
 const props = defineProps({
   title: {
@@ -94,14 +95,14 @@ const prayers = computed(() =>
   props.category === 'unbelievers' ? prayerStore.unbelievers : prayerStore.brethren
 );
 
-const headerClass = computed(() => {
-  if (props.color === 'purple') return 'bg-purple-50';
-  return 'bg-indigo-50'; // Default to indigo
+const headerBgClass = computed(() => {
+  if (props.color === 'purple') return 'bg-gradient-to-r from-purple-50 to-purple-100';
+  return 'bg-gradient-to-r from-indigo-50 to-indigo-100'; // Default to indigo
 });
 
-const buttonClass = computed(() => {
-  if (props.color === 'purple') return 'bg-purple-600 hover:bg-purple-700 focus:ring-purple-500';
-  return 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'; // Default to indigo
+const buttonBgClass = computed(() => {
+  if (props.color === 'purple') return '';
+  return ''; // Default to indigo
 });
 
 // Functions that interact with the modal

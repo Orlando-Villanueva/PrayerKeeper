@@ -17,46 +17,41 @@
               </h3>
               <div class="mt-4">
                 <form @submit.prevent="savePrayer">
-                  <div class="mb-4">
-                    <label for="person_name" class="block text-sm font-medium text-gray-700">Name</label>
-                    <input 
-                      type="text" 
-                      id="person_name" 
-                      v-model="prayer.person_name" 
-                      class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      required
-                    />
-                  </div>
-                  <div class="mb-4">
-                    <label for="note" class="block text-sm font-medium text-gray-700">Note (Optional)</label>
-                    <textarea 
-                      id="note" 
-                      v-model="prayer.note" 
-                      rows="3" 
-                      class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    ></textarea>
-                  </div>
+                  <BaseInput
+                    id="person_name"
+                    label="Name"
+                    v-model="prayer.person_name"
+                    name="person_name"
+                    required
+                  />
+                  <BaseTextarea
+                    id="note"
+                    label="Note (Optional)"
+                    v-model="prayer.note"
+                    name="note"
+                    :rows="3"
+                  />
                 </form>
               </div>
             </div>
           </div>
         </div>
         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button 
-            type="button" 
-            @click="savePrayer" 
-            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
-            :disabled="prayerStore.loading"
+          <BaseButton
+            variant="primary"
+            @click="savePrayer"
+            :loading="prayerStore.loading"
+            class="sm:ml-3"
           >
             {{ isEditMode ? 'Save Changes' : 'Add Prayer' }}
-          </button>
-          <button 
-            type="button" 
-            @click="closeModal" 
-            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+          </BaseButton>
+          <BaseButton
+            variant="secondary"
+            @click="closeModal"
+            class="mt-3 sm:mt-0 sm:ml-3"
           >
             Cancel
-          </button>
+          </BaseButton>
         </div>
       </div>
     </div>
@@ -66,6 +61,9 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { usePrayerStore } from '../../stores/prayerStore';
+import BaseInput from '../ui/BaseInput.vue';
+import BaseTextarea from '../ui/BaseTextarea.vue';
+import BaseButton from '../ui/BaseButton.vue';
 
 const props = defineProps({
   modelValue: Boolean,

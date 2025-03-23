@@ -8,7 +8,7 @@ const routes = [
         path: '/',
         redirect: to => {
             const authStore = useAuthStore();
-            return authStore.isAuthenticated ? '/dashboard' : '/login';
+            return authStore.isAuthenticated ? '/dashboard' : '/auth';
         }
     },
     {
@@ -17,12 +17,7 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
-        path: '/login',
-        component: Auth,
-        meta: { guestOnly: true }
-    },
-    {
-        path: '/signup',
+        path: '/auth',
         component: Auth,
         meta: { guestOnly: true }
     },
@@ -45,7 +40,7 @@ router.beforeEach(async (to, from, next) => {
     // Check if the route requires authentication
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
         // Redirect to login if not authenticated
-        next('/login');
+        next('/auth');
     }
     // Check if the route is for guests only (like login/signup) and user is already authenticated
     else if (to.meta.guestOnly && authStore.isAuthenticated) {

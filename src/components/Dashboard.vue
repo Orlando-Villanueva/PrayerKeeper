@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gradient-to-b from-purple-50 to-white">
     <!-- Navigation Bar -->
     <NavBar />
 
@@ -7,7 +7,7 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Loading State -->
       <div v-if="prayerStore.loading" class="flex justify-center items-center py-8">
-        <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-indigo-500"></div>
+        <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-purple-500"></div>
       </div>
 
       <!-- Error State -->
@@ -33,7 +33,7 @@
         <PrayerList 
           title="Unbelievers"
           category="unbelievers"
-          color="indigo"
+          color="purple"
         />
 
         <!-- Prayers for Brethren -->
