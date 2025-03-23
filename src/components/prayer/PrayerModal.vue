@@ -1,6 +1,6 @@
 <template>
   <div v-if="modelValue" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex items-center justify-center min-h-screen pt-4 px-2 pb-10 text-center sm:block sm:p-0">
+    <div class="flex items-start justify-center min-h-screen pt-4 px-2 pb-20 text-center sm:items-center sm:p-0">
       <!-- Background overlay -->
       <div class="fixed inset-0" aria-hidden="true" @click="closeModal">
         <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
@@ -8,7 +8,8 @@
 
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-      <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full relative w-full mx-2 sm:mx-auto">
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full relative w-full mx-2 sm:mx-auto max-h-[90vh] overflow-y-auto">
+        <!-- Content wrapper -->
         <div class="bg-white px-3 pt-4 pb-3 sm:p-6 sm:pb-4">
           <div class="sm:flex sm:items-start">
             <div class="mt-2 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
@@ -57,7 +58,7 @@
             </div>
           </div>
         </div>
-        <div class="bg-gray-50 px-3 py-2 sm:px-6 sm:py-3 sm:flex sm:flex-row-reverse">
+        <div class="bg-gray-50 px-3 py-2 sm:px-6 sm:py-3 sm:flex sm:flex-row-reverse sticky bottom-0">
           <BaseButton
             variant="primary"
             @click="savePrayer"
