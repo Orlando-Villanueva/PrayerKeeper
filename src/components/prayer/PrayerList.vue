@@ -27,7 +27,7 @@
                 {{ prayer.note }}
               </p>
               <span v-if="prayer.resolved" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-2">
-                Resolved
+                {{ category === 'unbelievers' ? 'Converted' : 'Resolved' }}
               </span>
             </div>
             <div class="flex space-x-2">

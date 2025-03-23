@@ -9,8 +9,20 @@ export const usePrayerStore = defineStore('prayer', {
     }),
 
     getters: {
-        unbelievers: (state) => state.prayers.filter(prayer => prayer.category === 'unbelievers'),
-        brethren: (state) => state.prayers.filter(prayer => prayer.category === 'brethren'),
+        unbelievers: (state) => {
+            const filtered = state.prayers.filter(prayer => prayer.category === 'unbelievers');
+            return [...filtered].sort((a, b) => {
+                if (a.resolved === b.resolved) return 0;
+                return a.resolved ? 1 : -1;
+            });
+        },
+        brethren: (state) => {
+            const filtered = state.prayers.filter(prayer => prayer.category === 'brethren');
+            return [...filtered].sort((a, b) => {
+                if (a.resolved === b.resolved) return 0;
+                return a.resolved ? 1 : -1;
+            });
+        },
         resolvedPrayers: (state) => state.prayers.filter(prayer => prayer.resolved),
         unresolvedPrayers: (state) => state.prayers.filter(prayer => !prayer.resolved)
     },
@@ -32,13 +44,13 @@ export const usePrayerStore = defineStore('prayer', {
 
                 if (error) throw error;
                 this.prayers = data || [];
+
                 return { success: true, data };
 
             } catch (error) {
                 this.error = error.message || 'Failed to fetch prayers';
                 console.error('Fetch prayers error:', error);
                 return { success: false, error: this.error };
-
             } finally {
                 this.loading = false;
             }
