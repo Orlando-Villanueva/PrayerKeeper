@@ -9,7 +9,7 @@
         <div class="flex items-center">
           <button 
             @click="handleSignOut" 
-            class="ml-4 px-4 py-2 rounded-md text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+            class="ml-4 px-4 py-2 rounded-md text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             :disabled="authStore.loading"
           >
             {{ authStore.loading ? 'Signing out...' : 'Logout' }}
