@@ -2,7 +2,7 @@
 
 A Vue.js application for managing prayer times and requests.
 
-![image](https://github.com/user-attachments/assets/03855433-0312-498e-ba2c-c7c59061d1c2)
+![image](https://github.com/user-attachments/assets/97867b89-8a0c-405d-8251-0733fc842ac9)
 
 ## Features
 
