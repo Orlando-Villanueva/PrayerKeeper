@@ -2,11 +2,23 @@
   <div class="bg-white shadow rounded-lg overflow-hidden">
     <div class="px-4 py-5 sm:px-6" :class="headerBgClass">
       <div class="flex justify-between items-center">
-        <h2 class="text-lg font-medium text-gray-900">{{ title }}</h2>
+        <div>
+          <h2 class="text-lg font-medium text-gray-900">{{ title }}</h2>
+          <button 
+            @click="showResolved = !showResolved"
+            class="mt-2 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 focus:outline-none"
+            :class="[
+              resolvedCount > 0 
+                ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                : 'bg-red-100 text-red-800 hover:bg-red-200'
+            ]"
+          >
+            Resolved ({{ resolvedCount }})
+          </button>
+        </div>
         <BaseButton 
           @click="openAddModal" 
           variant="primary"
-          :class="buttonBgClass"
         >
           Add Prayer
         </BaseButton>
@@ -67,7 +79,7 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { usePrayerStore } from '../../stores/prayerStore';
 import BaseButton from '../ui/BaseButton.vue';
 
@@ -90,19 +102,21 @@ const prayerStore = usePrayerStore();
 const modalFunctions = inject('modalFunctions');
 const prayerActions = inject('prayerActions');
 
-// Get appropriate prayers based on category
+const showResolved = ref(false);
+
+// Get filtered prayers from store
 const prayers = computed(() => 
-  props.category === 'unbelievers' ? prayerStore.unbelievers : prayerStore.brethren
+  prayerStore.prayersByCategory(props.category, showResolved.value)
+);
+
+// Get resolved count from store
+const resolvedCount = computed(() => 
+  prayerStore.resolvedCountByCategory(props.category)
 );
 
 const headerBgClass = computed(() => {
   if (props.color === 'purple') return 'bg-gradient-to-r from-purple-50 to-purple-100';
   return 'bg-gradient-to-r from-indigo-50 to-indigo-100'; // Default to indigo
-});
-
-const buttonBgClass = computed(() => {
-  if (props.color === 'purple') return '';
-  return ''; // Default to indigo
 });
 
 // Functions that interact with the modal

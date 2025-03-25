@@ -9,22 +9,24 @@ export const usePrayerStore = defineStore('prayer', {
     }),
 
     getters: {
-        unbelievers: (state) => {
-            const filtered = state.prayers.filter(prayer => prayer.category === 'unbelievers');
-            return [...filtered].sort((a, b) => {
-                if (a.resolved === b.resolved) return 0;
-                return a.resolved ? 1 : -1;
-            });
+        // Get filtered prayers by category with optional resolved filter
+        prayersByCategory: (state) => (category, showResolved) => {
+            const prayers = state.prayers.filter(prayer => prayer.category === category);
+            if (showResolved) {
+                return [...prayers].sort((a, b) => {
+                    if (a.resolved === b.resolved) return 0;
+                    return a.resolved ? 1 : -1;
+                });
+            }
+            return prayers.filter(prayer => !prayer.resolved);
         },
-        brethren: (state) => {
-            const filtered = state.prayers.filter(prayer => prayer.category === 'brethren');
-            return [...filtered].sort((a, b) => {
-                if (a.resolved === b.resolved) return 0;
-                return a.resolved ? 1 : -1;
-            });
-        },
-        resolvedPrayers: (state) => state.prayers.filter(prayer => prayer.resolved),
-        unresolvedPrayers: (state) => state.prayers.filter(prayer => !prayer.resolved)
+
+        // Get count of resolved prayers by category
+        resolvedCountByCategory: (state) => (category) => {
+            return state.prayers.filter(prayer =>
+                prayer.category === category && prayer.resolved
+            ).length;
+        }
     },
 
     actions: {
