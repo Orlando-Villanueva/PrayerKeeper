@@ -118,24 +118,6 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async getCurrentUser() {
-            if (this.user) return this.user;
-
-            try {
-                this.loading = true;
-                const { data } = await supabase.auth.getUser();
-                if (data?.user) {
-                    this.user = data.user;
-                }
-                return this.user;
-            } catch (error) {
-                console.error('Error getting current user:', error);
-                return null;
-            } finally {
-                this.loading = false;
-            }
-        },
-
         resetError() {
             this.error = null;
         }
