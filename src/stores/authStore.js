@@ -126,18 +126,11 @@ export const useAuthStore = defineStore('auth', {
                 this.error = null;
                 this.resetEmailSent = false;
 
-                // Get the correct redirect URL based on the environment
-                const appUrl = import.meta.env.VITE_APP_URL;
-                console.log('Environment VITE_APP_URL:', appUrl);
-                console.log('Current origin:', window.location.origin);
-                console.log('Is production?', import.meta.env.PROD);
-
-                // Force use production URL if in production environment
-                const redirectUrl = import.meta.env.PROD ?
-                    'https://track-prayer.vercel.app/reset-password' :
-                    `${window.location.origin}/reset-password`;
-
-                console.log('Final redirect URL:', redirectUrl);
+                // Always use window.location.origin in development to keep links local
+                // In production, use the configured app URL
+                const isDev = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
+                const baseUrl = isDev ? window.location.origin : (import.meta.env.VITE_APP_URL || window.location.origin);
+                const redirectUrl = `${baseUrl}/reset-password`;
 
                 const { error } = await supabase.auth.resetPasswordForEmail(email, {
                     redirectTo: redirectUrl,
