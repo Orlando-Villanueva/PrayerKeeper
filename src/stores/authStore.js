@@ -129,7 +129,7 @@ export const useAuthStore = defineStore('auth', {
                 // Get the correct redirect URL based on the environment
                 const productionUrl = import.meta.env.VITE_APP_URL;
                 const redirectUrl = productionUrl ?
-                    `${productionUrl}/reset-password` :
+                    `https://track-prayer.vercel.app/reset-password` :
                     `${window.location.origin}/reset-password`;
 
                 const { error } = await supabase.auth.resetPasswordForEmail(email, {
