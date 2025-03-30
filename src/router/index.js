@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
 import Dashboard from '../components/Dashboard.vue';
 import Auth from '../components/auth/Auth.vue';
+import UpdatePassword from '../components/auth/UpdatePassword.vue';
 
 const routes = [
     {
@@ -21,6 +22,11 @@ const routes = [
         component: Auth,
         meta: { guestOnly: true }
     },
+    {
+        path: '/reset-password',
+        component: UpdatePassword,
+        meta: { guestOnly: true }
+    }
 ];
 
 const router = createRouter({
@@ -35,6 +41,12 @@ router.beforeEach(async (to, from, next) => {
     // Wait for auth initialization to complete if it hasn't already
     if (!authStore.initialized) {
         await authStore.initialize();
+    }
+
+    // Special handling for reset-password route
+    if (to.path === '/reset-password') {
+        // Allow access to reset-password route regardless of auth status
+        return next();
     }
 
     // Check if the route requires authentication

@@ -41,7 +41,17 @@
           :required="true"
         />
         
-        <div v-if="error" class="rounded-md bg-red-50 p-4 mb-3">
+        <div v-if="mode === 'login'" class="mt-2 text-right">
+          <button
+            type="button"
+            class="text-sm text-purple-600 hover:text-purple-800"
+            @click="$emit('update:mode', 'reset')"
+          >
+            Forgot your password?
+          </button>
+        </div>
+        
+        <div v-if="error" class="rounded-md bg-red-50 p-4 mb-3 mt-3">
           <div class="text-sm text-red-700">{{ error }}</div>
         </div>
         

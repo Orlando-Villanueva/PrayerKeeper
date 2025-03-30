@@ -7,13 +7,15 @@ export const useAuthStore = defineStore('auth', {
         loading: false,
         error: null,
         session: null,
-        initialized: false
+        initialized: false,
+        resetEmailSent: false
     }),
 
     getters: {
         isAuthenticated: (state) => !!state.user,
         errorMessage: (state) => state.error,
-        isEmailVerified: (state) => state.user?.email_confirmed_at || state.user?.confirmed_at
+        isEmailVerified: (state) => state.user?.email_confirmed_at || state.user?.confirmed_at,
+        hasResetEmailSent: (state) => state.resetEmailSent
     },
 
     actions: {
@@ -118,8 +120,79 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
+        async resetPassword(email) {
+            try {
+                this.loading = true;
+                this.error = null;
+                this.resetEmailSent = false;
+
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: `${window.location.origin}/reset-password`,
+                });
+
+                if (error) throw error;
+
+                this.resetEmailSent = true;
+                return { success: true };
+            } catch (error) {
+                this.error = error.message || 'Failed to send reset password email';
+                console.error('Reset password error:', error);
+                return { success: false, error: this.error };
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async setSession(accessToken, refreshToken = '') {
+            try {
+                this.loading = true;
+                this.error = null;
+
+                const { data, error } = await supabase.auth.setSession({
+                    access_token: accessToken,
+                    refresh_token: refreshToken,
+                });
+
+                if (error) throw error;
+
+                if (data.session) {
+                    this.session = data.session;
+                    this.user = data.session.user;
+                }
+
+                return { success: true, data };
+            } catch (error) {
+                this.error = error.message || 'Failed to set session';
+                console.error('Set session error:', error);
+                return { success: false, error: this.error };
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async updatePassword(newPassword) {
+            try {
+                this.loading = true;
+                this.error = null;
+
+                const { data, error } = await supabase.auth.updateUser({
+                    password: newPassword
+                });
+
+                if (error) throw error;
+                return { success: true, data };
+            } catch (error) {
+                this.error = error.message || 'Failed to update password';
+                console.error('Update password error:', error);
+                return { success: false, error: this.error };
+            } finally {
+                this.loading = false;
+            }
+        },
+
         resetError() {
             this.error = null;
+            this.resetEmailSent = false;
         }
     }
 });
