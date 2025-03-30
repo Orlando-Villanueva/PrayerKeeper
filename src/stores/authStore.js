@@ -120,6 +120,27 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
+        async signInWithTwitter() {
+            try {
+                this.loading = true;
+                this.error = null;
+
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: 'twitter',
+                });
+
+                if (error) throw error;
+
+                return { success: true, data };
+            } catch (error) {
+                this.error = error.message || 'Failed to sign in with Twitter';
+                console.error('Twitter sign in error:', error);
+                return { success: false, error: this.error };
+            } finally {
+                this.loading = false;
+            }
+        },
+
         async resetPassword(email) {
             try {
                 this.loading = true;
