@@ -126,8 +126,7 @@ export const useAuthStore = defineStore('auth', {
                 this.error = null;
                 this.resetEmailSent = false;
 
-                // Always use window.location.origin in development to keep links local
-                // In production, use the configured app URL
+                // Determine appropriate redirect URL based on environment
                 const isDev = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
                 const baseUrl = isDev ? window.location.origin : (import.meta.env.VITE_APP_URL || window.location.origin);
                 const redirectUrl = `${baseUrl}/reset-password`;
