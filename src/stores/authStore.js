@@ -126,9 +126,11 @@ export const useAuthStore = defineStore('auth', {
                 this.error = null;
                 this.resetEmailSent = false;
 
-                // Use the environment variable for production URL or fallback to window.location.origin
+                // Get the correct redirect URL based on the environment
                 const productionUrl = import.meta.env.VITE_APP_URL;
-                const redirectUrl = `${import.meta.env.PROD ? productionUrl : window.location.origin}/reset-password`;
+                const redirectUrl = productionUrl ?
+                    `${productionUrl}/reset-password` :
+                    `${window.location.origin}/reset-password`;
 
                 const { error } = await supabase.auth.resetPasswordForEmail(email, {
                     redirectTo: redirectUrl,
