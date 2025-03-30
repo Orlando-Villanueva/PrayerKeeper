@@ -126,7 +126,10 @@ export const useAuthStore = defineStore('auth', {
                 this.loading = true;
                 this.error = null;
 
-                const { data, error } = await supabase.auth.signInWithOAuth({
+                // Get the deployment URL - works for both Vercel production and preview URLs
+                const deploymentUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+
+                const { error } = await supabase.auth.signInWithOAuth({
                     provider: 'twitter',
                     options: {
                         redirectTo: `${window.location.origin}/auth/callback`,
@@ -136,7 +139,7 @@ export const useAuthStore = defineStore('auth', {
 
                 if (error) throw error;
 
-                return { success: true, data };
+                return { success: true };
             } catch (error) {
                 this.error = error.message || 'Failed to sign in with Twitter';
                 console.error('Twitter sign in error:', error);
