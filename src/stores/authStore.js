@@ -1,21 +1,22 @@
-import { defineStore } from 'pinia';
-import { supabase } from '../db/supabase';
+import { defineStore } from "pinia";
+import { supabase } from "../db/supabase";
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore("auth", {
     state: () => ({
         user: null,
         loading: false,
         error: null,
         session: null,
         initialized: false,
-        resetEmailSent: false
+        resetEmailSent: false,
     }),
 
     getters: {
         isAuthenticated: (state) => !!state.user,
         errorMessage: (state) => state.error,
-        isEmailVerified: (state) => state.user?.email_confirmed_at || state.user?.confirmed_at,
-        hasResetEmailSent: (state) => state.resetEmailSent
+        isEmailVerified: (state) =>
+            state.user?.email_confirmed_at || state.user?.confirmed_at,
+        hasResetEmailSent: (state) => state.resetEmailSent,
     },
 
     actions: {
@@ -39,8 +40,8 @@ export const useAuthStore = defineStore('auth', {
                 this.initialized = true;
                 return this.user;
             } catch (error) {
-                this.error = error.message || 'Failed to initialize auth';
-                console.error('Auth initialization error:', error);
+                this.error = error.message || "Failed to initialize auth";
+                console.error("Auth initialization error:", error);
             } finally {
                 this.loading = false;
             }
@@ -65,8 +66,8 @@ export const useAuthStore = defineStore('auth', {
 
                 return { success: true, data };
             } catch (error) {
-                this.error = error.message || 'Failed to sign up';
-                console.error('Sign up error:', error);
+                this.error = error.message || "Failed to sign up";
+                console.error("Sign up error:", error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
@@ -90,8 +91,8 @@ export const useAuthStore = defineStore('auth', {
 
                 return { success: true, data };
             } catch (error) {
-                this.error = error.message || 'Failed to sign in';
-                console.error('Sign in error:', error);
+                this.error = error.message || "Failed to sign in";
+                console.error("Sign in error:", error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
@@ -112,8 +113,8 @@ export const useAuthStore = defineStore('auth', {
 
                 return { success: true };
             } catch (error) {
-                this.error = error.message || 'Failed to sign out';
-                console.error('Sign out error:', error);
+                this.error = error.message || "Failed to sign out";
+                console.error("Sign out error:", error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
@@ -126,26 +127,31 @@ export const useAuthStore = defineStore('auth', {
                 this.error = null;
 
                 // Get the deployment URL - works for both Vercel production and preview URLs
-                const deploymentUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+                const deploymentUrl =
+                    import.meta.env.VITE_APP_URL || window.location.origin;
+                const callbackUrl = `${deploymentUrl}/auth/callback`;
+                console.log(callbackUrl);
 
-                const { error } = await supabase.auth.signInWithOAuth({
-                    provider: 'twitter',
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: "twitter",
                     options: {
-                        redirectTo: `${deploymentUrl}`,
-                        scopes: 'tweet.read users.read offline.access email',
+                        redirectTo:
+                            "https://bead384b-e6f8-4448-a158-d3cc14d235a9-00-518tr9h6oej7.worf.replit.dev/auth/callback",
+                        scopes: "tweet.read users.read offline.access email",
                         queryParams: {
-                            access_type: 'offline',
-                            prompt: 'consent',
-                        }
-                    }
+                            // Explicitly request email scope to maximize chance of getting email
+                            access_type: "offline",
+                            prompt: "consent",
+                        },
+                    },
                 });
 
                 if (error) throw error;
 
-                return { success: true };
+                return { success: true, data };
             } catch (error) {
-                this.error = error.message || 'Failed to sign in with Twitter';
-                console.error('Twitter sign in error:', error);
+                this.error = error.message || "Failed to sign in with Twitter";
+                console.error("Twitter sign in error:", error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
@@ -159,28 +165,36 @@ export const useAuthStore = defineStore('auth', {
                 this.resetEmailSent = false;
 
                 // Determine appropriate redirect URL based on environment
-                const isDev = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
-                const baseUrl = isDev ? window.location.origin : (import.meta.env.VITE_APP_URL || window.location.origin);
+                const isDev =
+                    process.env.NODE_ENV === "development" ||
+                    window.location.hostname === "localhost";
+                const baseUrl = isDev
+                    ? window.location.origin
+                    : import.meta.env.VITE_APP_URL || window.location.origin;
                 const redirectUrl = `${baseUrl}/reset-password`;
 
-                const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: redirectUrl,
-                });
+                const { error } = await supabase.auth.resetPasswordForEmail(
+                    email,
+                    {
+                        redirectTo: redirectUrl,
+                    },
+                );
 
                 if (error) throw error;
 
                 this.resetEmailSent = true;
                 return { success: true };
             } catch (error) {
-                this.error = error.message || 'Failed to send reset password email';
-                console.error('Reset password error:', error);
+                this.error =
+                    error.message || "Failed to send reset password email";
+                console.error("Reset password error:", error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
             }
         },
 
-        async setSession(accessToken, refreshToken = '') {
+        async setSession(accessToken, refreshToken = "") {
             try {
                 this.loading = true;
                 this.error = null;
@@ -199,8 +213,8 @@ export const useAuthStore = defineStore('auth', {
 
                 return { success: true, data };
             } catch (error) {
-                this.error = error.message || 'Failed to set session';
-                console.error('Set session error:', error);
+                this.error = error.message || "Failed to set session";
+                console.error("Set session error:", error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
@@ -213,14 +227,14 @@ export const useAuthStore = defineStore('auth', {
                 this.error = null;
 
                 const { data, error } = await supabase.auth.updateUser({
-                    password: newPassword
+                    password: newPassword,
                 });
 
                 if (error) throw error;
                 return { success: true, data };
             } catch (error) {
-                this.error = error.message || 'Failed to update password';
-                console.error('Update password error:', error);
+                this.error = error.message || "Failed to update password";
+                console.error("Update password error:", error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
@@ -230,6 +244,6 @@ export const useAuthStore = defineStore('auth', {
         resetError() {
             this.error = null;
             this.resetEmailSent = false;
-        }
-    }
+        },
+    },
 });
