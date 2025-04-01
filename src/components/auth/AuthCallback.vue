@@ -35,6 +35,14 @@ const goToLogin = () => {
 
 onMounted(async () => {
   try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const errorDescription = urlParams.get('error_description');
+    
+    if (errorDescription?.includes('Error getting user email')) {
+      error.value = "Unable to sign in. Please make sure you have an email address linked to your X/Twitter account and try again.";
+      return;
+    }
+
     await authStore.initialize();
     if (authStore.isAuthenticated) {
       router.push('/dashboard');
@@ -43,11 +51,7 @@ onMounted(async () => {
     }
   } catch (err) {
     console.error('Auth callback error:', err);
-    if (err.message.includes('email_missing')) {
-      error.value = "Unable to sign in. Please make sure you have an email address linked to your X/Twitter account and try again.";
-    } else {
-      error.value = err.message || 'Authentication failed';
-    }
+    error.value = err.message || 'Authentication failed';
   }
 });
 </script>
