@@ -1,7 +1,8 @@
-import { defineStore } from "pinia";
-import { supabase } from "../db/supabase";
 
-export const useAuthStore = defineStore("auth", {
+import { defineStore } from 'pinia';
+import { supabase } from '../db/supabase';
+
+export const useAuthStore = defineStore('auth', {
     state: () => ({
         user: null,
         loading: false,
@@ -40,8 +41,8 @@ export const useAuthStore = defineStore("auth", {
                 this.initialized = true;
                 return this.user;
             } catch (error) {
-                this.error = error.message || "Failed to initialize auth";
-                console.error("Auth initialization error:", error);
+                this.error = error.message || 'Failed to initialize auth';
+                console.error('Auth initialization error:', error);
             } finally {
                 this.loading = false;
             }
@@ -66,8 +67,8 @@ export const useAuthStore = defineStore("auth", {
 
                 return { success: true, data };
             } catch (error) {
-                this.error = error.message || "Failed to sign up";
-                console.error("Sign up error:", error);
+                this.error = error.message || 'Failed to sign up';
+                console.error('Sign up error:', error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
@@ -91,8 +92,8 @@ export const useAuthStore = defineStore("auth", {
 
                 return { success: true, data };
             } catch (error) {
-                this.error = error.message || "Failed to sign in";
-                console.error("Sign in error:", error);
+                this.error = error.message || 'Failed to sign in';
+                console.error('Sign in error:', error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
@@ -113,8 +114,8 @@ export const useAuthStore = defineStore("auth", {
 
                 return { success: true };
             } catch (error) {
-                this.error = error.message || "Failed to sign out";
-                console.error("Sign out error:", error);
+                this.error = error.message || 'Failed to sign out';
+                console.error('Sign out error:', error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
@@ -127,7 +128,7 @@ export const useAuthStore = defineStore("auth", {
                 this.error = null;
 
                 const { data, error } = await supabase.auth.signInWithOAuth({
-                    provider: "twitter",
+                    provider: 'twitter',
                     options: {
                         redirectTo: `${window.location.origin}/auth/callback`,
                         scopes: 'tweet.read users.read offline.access email',
@@ -138,8 +139,8 @@ export const useAuthStore = defineStore("auth", {
 
                 return { success: true, data };
             } catch (error) {
-                this.error = error.message || "Failed to sign in with Twitter";
-                console.error("Twitter sign in error:", error);
+                this.error = error.message || 'Failed to sign in with Twitter';
+                console.error('Twitter sign in error:', error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
@@ -182,7 +183,7 @@ export const useAuthStore = defineStore("auth", {
             }
         },
 
-        async setSession(accessToken, refreshToken = "") {
+        async setSession(accessToken, refreshToken = '') {
             try {
                 this.loading = true;
                 this.error = null;
@@ -201,8 +202,8 @@ export const useAuthStore = defineStore("auth", {
 
                 return { success: true, data };
             } catch (error) {
-                this.error = error.message || "Failed to set session";
-                console.error("Set session error:", error);
+                this.error = error.message || 'Failed to set session';
+                console.error('Set session error:', error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
@@ -221,8 +222,8 @@ export const useAuthStore = defineStore("auth", {
                 if (error) throw error;
                 return { success: true, data };
             } catch (error) {
-                this.error = error.message || "Failed to update password";
-                console.error("Update password error:", error);
+                this.error = error.message || 'Failed to update password';
+                console.error('Update password error:', error);
                 return { success: false, error: this.error };
             } finally {
                 this.loading = false;
