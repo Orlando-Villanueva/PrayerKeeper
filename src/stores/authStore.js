@@ -130,7 +130,7 @@ export const useAuthStore = defineStore("auth", {
                     provider: "twitter",
                     options: {
                         redirectTo: `${window.location.origin}/auth/callback`,
-                        scopes: "tweet.read users.read offline.access email"
+                        scopes: "tweet.read users.read offline.access email",
                     },
                 });
 
