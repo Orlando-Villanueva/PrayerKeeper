@@ -133,6 +133,10 @@ export const useAuthStore = defineStore('auth', {
                     options: {
                         redirectTo: `${deploymentUrl}`,
                         scopes: 'tweet.read users.read offline.access email',
+                        queryParams: {
+                            access_type: 'offline',
+                            prompt: 'consent',
+                        }
                     }
                 });
 
