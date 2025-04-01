@@ -3,6 +3,9 @@ import { useAuthStore } from '../stores/authStore';
 import Dashboard from '../components/Dashboard.vue';
 import Auth from '../components/auth/Auth.vue';
 import UpdatePassword from '../components/auth/UpdatePassword.vue';
+import AuthCallback from '../components/auth/AuthCallback.vue';
+import TermsOfService from '../components/legal/TermsOfService.vue';
+import PrivacyPolicy from '../components/legal/PrivacyPolicy.vue';
 
 const routes = [
     {
@@ -26,7 +29,20 @@ const routes = [
         path: '/reset-password',
         component: UpdatePassword,
         meta: { guestOnly: true }
-    }
+    },
+    {
+        path: '/auth/callback',
+        name: 'auth-callback',
+        component: AuthCallback,
+    },
+    {
+        path: '/terms',
+        component: TermsOfService,
+    },
+    {
+        path: '/privacy',
+        component: PrivacyPolicy,
+    },
 ];
 
 const router = createRouter({
