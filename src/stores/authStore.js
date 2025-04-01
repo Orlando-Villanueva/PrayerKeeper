@@ -126,23 +126,11 @@ export const useAuthStore = defineStore("auth", {
                 this.loading = true;
                 this.error = null;
 
-                // Get the deployment URL - works for both Vercel production and preview URLs
-                const deploymentUrl =
-                    import.meta.env.VITE_APP_URL || window.location.origin;
-                const callbackUrl = `${deploymentUrl}/auth/callback`;
-                console.log(callbackUrl)a;
-
                 const { data, error } = await supabase.auth.signInWithOAuth({
                     provider: "twitter",
                     options: {
-                        redirectTo:
-                            "https://bead384b-e6f8-4448-a158-d3cc14d235a9-00-518tr9h6oej7.worf.replit.dev/auth/callback",
-                        scopes: "tweet.read users.read offline.access email",
-                        queryParams: {
-                            // Explicitly request email scope to maximize chance of getting email
-                            access_type: "offline",
-                            prompt: "consent",
-                        },
+                        redirectTo: `${window.location.origin}/auth/callback`,
+                        scopes: "tweet.read users.read offline.access email"
                     },
                 });
 
