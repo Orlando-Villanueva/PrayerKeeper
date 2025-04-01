@@ -8,14 +8,15 @@ export const useAuthStore = defineStore('auth', {
         error: null,
         session: null,
         initialized: false,
-        resetEmailSent: false
+        resetEmailSent: false,
     }),
 
     getters: {
         isAuthenticated: (state) => !!state.user,
         errorMessage: (state) => state.error,
-        isEmailVerified: (state) => state.user?.email_confirmed_at || state.user?.confirmed_at,
-        hasResetEmailSent: (state) => state.resetEmailSent
+        isEmailVerified: (state) =>
+            state.user?.email_confirmed_at || state.user?.confirmed_at,
+        hasResetEmailSent: (state) => state.resetEmailSent,
     },
 
     actions: {
@@ -125,20 +126,17 @@ export const useAuthStore = defineStore('auth', {
                 this.loading = true;
                 this.error = null;
 
-                // Get the deployment URL - works for both Vercel production and preview URLs
-                const deploymentUrl = import.meta.env.VITE_APP_URL || window.location.origin;
-
-                const { error } = await supabase.auth.signInWithOAuth({
+                const { data, error } = await supabase.auth.signInWithOAuth({
                     provider: 'twitter',
                     options: {
-                        redirectTo: `${deploymentUrl}`,
+                        redirectTo: `${window.location.origin}/auth/callback`,
                         scopes: 'tweet.read users.read offline.access email',
-                    }
+                    },
                 });
 
                 if (error) throw error;
 
-                return { success: true };
+                return { success: true, data };
             } catch (error) {
                 this.error = error.message || 'Failed to sign in with Twitter';
                 console.error('Twitter sign in error:', error);
@@ -155,20 +153,28 @@ export const useAuthStore = defineStore('auth', {
                 this.resetEmailSent = false;
 
                 // Determine appropriate redirect URL based on environment
-                const isDev = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
-                const baseUrl = isDev ? window.location.origin : (import.meta.env.VITE_APP_URL || window.location.origin);
+                const isDev =
+                    process.env.NODE_ENV === 'development' ||
+                    window.location.hostname === 'localhost';
+                const baseUrl = isDev
+                    ? window.location.origin
+                    : import.meta.env.VITE_APP_URL || window.location.origin;
                 const redirectUrl = `${baseUrl}/reset-password`;
 
-                const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: redirectUrl,
-                });
+                const { error } = await supabase.auth.resetPasswordForEmail(
+                    email,
+                    {
+                        redirectTo: redirectUrl,
+                    },
+                );
 
                 if (error) throw error;
 
                 this.resetEmailSent = true;
                 return { success: true };
             } catch (error) {
-                this.error = error.message || 'Failed to send reset password email';
+                this.error =
+                    error.message || 'Failed to send reset password email';
                 console.error('Reset password error:', error);
                 return { success: false, error: this.error };
             } finally {
@@ -209,7 +215,7 @@ export const useAuthStore = defineStore('auth', {
                 this.error = null;
 
                 const { data, error } = await supabase.auth.updateUser({
-                    password: newPassword
+                    password: newPassword,
                 });
 
                 if (error) throw error;
@@ -226,6 +232,6 @@ export const useAuthStore = defineStore('auth', {
         resetError() {
             this.error = null;
             this.resetEmailSent = false;
-        }
-    }
+        },
+    },
 });
