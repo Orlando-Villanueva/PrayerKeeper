@@ -126,12 +126,6 @@ export const useAuthStore = defineStore("auth", {
                 this.loading = true;
                 this.error = null;
 
-                // Get the deployment URL - works for both Vercel production and preview URLs
-                const deploymentUrl =
-                    import.meta.env.VITE_APP_URL || window.location.origin;
-                const callbackUrl = `${deploymentUrl}/auth/callback`;
-                console.log(callbackUrl)a;
-
                 const { data, error } = await supabase.auth.signInWithOAuth({
                     provider: "twitter",
                     options: {
