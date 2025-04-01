@@ -75,12 +75,17 @@ onMounted(() => {
   if (urlError || hashError) {
     console.error('OAuth error:', errorDescription);
     
-    if (errorDescription && (
+    // Check for error in both URL params and hash
+    const isEmailError = errorDescription && (
       errorDescription.includes('Error getting user email') ||
       errorDescription.includes('email') ||
-      errorDescription.includes('Email')
-    )) {
+      errorCode === 'unexpected_failure'
+    );
+
+    if (isEmailError) {
       emailMissingError.value = true;
+      // Clear the URL to avoid showing error params
+      window.history.replaceState({}, document.title, '/auth');
     } else {
       error.value = errorDescription || 'Authentication failed';
     }
