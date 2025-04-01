@@ -8,29 +8,24 @@
       </div>
       
       <!-- Twitter Email Missing Error -->
-      <div v-if="emailMissingError" class="mt-4">
+      <div v-if="emailMissingError" class="mt-4 max-w-md mx-auto bg-amber-50 border border-amber-200 rounded-lg p-6">
         <svg class="h-12 w-12 text-amber-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
         </svg>
-        <h3 class="text-xl font-medium mt-3 text-gray-900">Email Required</h3>
-        <p class="mt-2 text-gray-600">
-          Twitter didn't provide an email address for your account. Twitter authentication requires an email address.
+        <h3 class="text-xl font-semibold mt-3 text-gray-900 text-center">Email Access Required</h3>
+        <p class="mt-3 text-gray-700 text-center">
+          We need access to your email address to create your account. This helps us secure your account and send important notifications.
         </p>
-        <div class="mt-4 space-y-3">
+        <div class="mt-6 space-y-4">
           <button 
             @click="goToLogin" 
-            class="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
           >
-            Use Email Login Instead
+            Try Another Sign In Method
           </button>
-          <a 
-            href="https://help.twitter.com/en/managing-your-account/how-to-add-an-email-address-to-your-twitter-account"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="block text-sm text-blue-600 hover:underline"
-          >
-            How to add an email to your Twitter account
-          </a>
+          <p class="text-sm text-gray-600 text-center">
+            Please ensure you've granted email access permissions when authenticating with Twitter.
+          </p>
         </div>
       </div>
       
@@ -80,7 +75,11 @@ onMounted(() => {
   if (urlError || hashError) {
     console.error('OAuth error:', errorDescription);
     
-    if (errorDescription && errorDescription.includes('Error getting user email')) {
+    if (errorDescription && (
+      errorDescription.includes('Error getting user email') ||
+      errorDescription.includes('email') ||
+      errorDescription.includes('Email')
+    )) {
       emailMissingError.value = true;
     } else {
       error.value = errorDescription || 'Authentication failed';
