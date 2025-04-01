@@ -54,7 +54,11 @@ onMounted(async () => {
     }
   } catch (err) {
     console.error('Auth callback error:', err);
-    error.value = err.message || 'Authentication failed';
+    if (err.message.includes('email_missing')) {
+      error.value = "Unable to sign in. Please make sure you have an email address linked to your X/Twitter account and try again.";
+    } else {
+      error.value = err.message || 'Authentication failed';
+    }
   }
 });
 </script>
