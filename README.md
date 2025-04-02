@@ -6,19 +6,45 @@ A Vue.js application for managing prayer times and requests.
 
 ## Features
 
-- User authentication via Supabase
-- Prayer tracking and management
-- Responsive design with Tailwind CSS
-- State management with Pinia
+- Authentication & Security:
+  - Email/Password login
+  - Social login with X (Twitter)
+  - Password reset
+  - Protected routes
+  - Persistent sessions
+- Prayer Management:
+  - Categorized lists (Unbelievers, Brethren)
+  - Add, edit, delete prayers
+  - Mark prayers as resolved
+  - Prayer history tracking
+  - Real-time updates
+- User Experience:
+  - Modern, responsive interface
+  - Modal-based forms
+  - Loading indicators
+  - Error handling
 
 ## Technologies
 
-- Vue 3 with Composition API and `<script setup>` SFCs
-- Vite for fast development and bundling
-- Supabase for backend and authentication
-- Tailwind CSS for styling
-- Vue Router for navigation
-- Pinia for state management
+Frontend:
+- Vue 3 (Composition API + `<script setup>` SFCs)
+- Vite (Development & Build Tool)
+- Tailwind CSS (Styling)
+- Vue Router (Routing)
+- Pinia (State Management)
+
+Backend & Services:
+- Supabase (Backend as a Service)
+  - Authentication
+  - Real-time Database
+  - Row Level Security
+  - OAuth Integration (X/Twitter)
+
+Development Tools:
+- Node.js v20
+- npm (Package Manager)
+- ESLint (Code Quality)
+- Vercel (Production Config)
 
 ## Getting Started
 
