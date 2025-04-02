@@ -18,7 +18,7 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
         flowType: 'implicit', // Use implicit flow for OAuth
         storage: localStorage,
         storageKey: 'supabase-auth',
-        debug: debug: import.meta.env.DEV, // Only enable debug in development
+        debug: import.meta.env.DEV, // Only enable debug in development
         site: siteUrl
     }
 });
