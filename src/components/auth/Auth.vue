@@ -7,7 +7,7 @@
           Keep Track of Your Prayers
         </h2>
         <p class="text-gray-600 mb-4">
-          Organize and manage prayer lists for 'Unbelievers' and 'Brethren'. <br class="hidden lg:block" /> Add new
+          Organize and manage prayer lists for both unbelievers and brethren. <br class="hidden lg:block" /> Add new
           prayers, edit existing ones, and
           resolve them when God answers.
         </p>
