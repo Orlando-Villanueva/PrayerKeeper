@@ -1,4 +1,4 @@
-# TrackPrayer 
+# PrayerKeeper 
 
 A Vue.js application for managing prayer times and requests.
 
