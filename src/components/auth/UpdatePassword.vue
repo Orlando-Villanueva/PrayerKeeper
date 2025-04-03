@@ -111,7 +111,7 @@ onMounted(() => {
   if (!window.location.hash.includes('type=recovery')) {
     // If this page is accessed directly without the recovery parameter
     if (!window.location.hash.includes('recovery')) {
-      router.push('/auth');
+      router.push('/');
     }
   }
 });
@@ -175,6 +175,6 @@ const handleSubmit = async () => {
 const handleSuccessRedirect = async () => {
   // Make sure to sign out before redirecting to login
   await authStore.signOut();
-  router.push('/auth');
+  router.push('/');
 };
 </script> 

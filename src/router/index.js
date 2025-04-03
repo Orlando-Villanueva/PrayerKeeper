@@ -10,20 +10,21 @@ import PrivacyPolicy from '../components/legal/PrivacyPolicy.vue';
 const routes = [
     {
         path: '/',
-        redirect: to => {
+        component: Auth,
+        meta: { guestOnly: true },
+        beforeEnter: (to, from, next) => {
             const authStore = useAuthStore();
-            return authStore.isAuthenticated ? '/dashboard' : '/auth';
+            if (authStore.isAuthenticated) {
+                next('/dashboard');
+            } else {
+                next();
+            }
         }
     },
     {
         path: '/dashboard',
         component: Dashboard,
         meta: { requiresAuth: true }
-    },
-    {
-        path: '/auth',
-        component: Auth,
-        meta: { guestOnly: true }
     },
     {
         path: '/reset-password',
@@ -68,7 +69,7 @@ router.beforeEach(async (to, from, next) => {
     // Check if the route requires authentication
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
         // Redirect to login if not authenticated
-        next('/auth');
+        next('/');
     }
     // Check if the route is for guests only (like login/signup) and user is already authenticated
     else if (to.meta.guestOnly && authStore.isAuthenticated) {

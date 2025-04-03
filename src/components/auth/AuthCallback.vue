@@ -33,7 +33,7 @@ const authStore = useAuthStore();
 const error = ref(null);
 
 const goToLogin = () => {
-  router.push('/auth');
+  router.push('/');
 };
 
 onMounted(async () => {
