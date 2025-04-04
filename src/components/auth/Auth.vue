@@ -6,8 +6,8 @@
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-md">
           Keep Track of Your Prayers
         </h2>
-        <p class="text-white/90 text-md mb-6 drop-shadow-sm">
-          Organize and manage prayer lists for both unbelievers and brethren. <br class="hidden lg:block" /> Add new
+        <p class="text-white/90 text-lg md:text-xl mb-6 drop-shadow-sm">
+          Organize and manage prayer lists for both unbelievers and brethren. Add new
           prayers, edit existing ones, and
           resolve them when God answers.
         </p>
