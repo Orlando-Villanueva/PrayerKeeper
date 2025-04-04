@@ -6,28 +6,24 @@ import UpdatePassword from '../components/auth/UpdatePassword.vue';
 import AuthCallback from '../components/auth/AuthCallback.vue';
 import TermsOfService from '../components/legal/TermsOfService.vue';
 import PrivacyPolicy from '../components/legal/PrivacyPolicy.vue';
+import NotFound from '../components/NotFound.vue';
 
 const routes = [
     {
         path: '/',
+        name: 'auth',
         component: Auth,
         meta: { guestOnly: true },
-        beforeEnter: (to, from, next) => {
-            const authStore = useAuthStore();
-            if (authStore.isAuthenticated) {
-                next('/dashboard');
-            } else {
-                next();
-            }
-        }
     },
     {
         path: '/dashboard',
+        name: 'dashboard',
         component: Dashboard,
         meta: { requiresAuth: true }
     },
     {
         path: '/reset-password',
+        name: 'reset-password',
         component: UpdatePassword,
         meta: { guestOnly: true }
     },
@@ -44,6 +40,11 @@ const routes = [
         path: '/privacy',
         component: PrivacyPolicy,
     },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'not-found',
+        component: NotFound
+    }
 ];
 
 const router = createRouter({
