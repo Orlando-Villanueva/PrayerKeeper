@@ -3,7 +3,7 @@
     :type="type"
     :disabled="disabled || loading"
     @click="$emit('click', $event)"
-    class="inline-flex items-center justify-center px-4 py-2 border rounded-md text-sm font-medium focus:outline-none transition-all duration-200"
+    class="inline-flex items-center justify-center px-4 py-2 border rounded-md text-sm font-medium focus:outline-none transition-all duration-200 hover:cursor-pointer"
     :class="buttonClasses"
   >
     <div v-if="loading" class="mr-2">
