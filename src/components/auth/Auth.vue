@@ -8,8 +8,7 @@
         </h2>
         <p class="text-white/90 text-lg md:text-xl mb-6 drop-shadow-sm">
           Organize and manage prayer lists for both unbelievers and brethren. Add new
-          prayers, edit existing ones, and
-          resolve them when God answers.
+          prayers, edit existing ones, and resolve them when God answers.
         </p>
       </div>
 
