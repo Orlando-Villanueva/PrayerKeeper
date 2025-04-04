@@ -70,7 +70,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../../stores/authStore';
 import BaseButton from '../ui/BaseButton.vue';
@@ -105,16 +105,6 @@ const getHashParams = () => {
     return {};
   }
 };
-
-onMounted(() => {
-  // Check if we have the recovery parameter
-  if (!window.location.hash.includes('type=recovery')) {
-    // If this page is accessed directly without the recovery parameter
-    if (!window.location.hash.includes('recovery')) {
-      router.push('/');
-    }
-  }
-});
 
 const handleSubmit = async () => {
   try {

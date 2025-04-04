@@ -61,10 +61,9 @@ router.beforeEach(async (to, from, next) => {
         await authStore.initialize();
     }
 
-    // Special handling for reset-password route
-    if (to.path === '/reset-password') {
-        // Allow access to reset-password route regardless of auth status
-        return next();
+    // Check for reset-password route without recovery parameter
+    if (to.name === 'reset-password' && !window.location.hash.includes('type=recovery') && !window.location.hash.includes('recovery')) {
+        return next('/');
     }
 
     // Check if the route requires authentication
