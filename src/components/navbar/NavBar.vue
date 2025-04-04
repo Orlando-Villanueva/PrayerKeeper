@@ -170,7 +170,7 @@ const handleSignOut = async () => {
   showMobileProfile.value = false;
   const { success } = await authStore.signOut();
   if (success) {
-    router.push('/auth');
+    router.push('/');
   }
 };
 </script> 
