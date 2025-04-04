@@ -1,12 +1,18 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-gradient-to-b from-purple-50 to-white">
+  <div class="min-h-screen flex flex-col relative">
+    <!-- Background Image with Overlay -->
+    <div class="absolute inset-0 z-0">
+      <img src="../../assets/homepage_background.jpg" alt="Background" class="w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-br from-purple-900/70 via-purple-600/50 to-white/30"></div>
+    </div>
+    
     <!-- Header - Minimal -->
-    <header class="py-4 px-6">
+    <header class="py-4 px-6 relative z-10">
       <div class="flex items-center justify-between">
         <div class="flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="text-purple-600 mr-2">
+            class="text-white mr-2">
             <path
               d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
             <path
@@ -14,23 +20,24 @@
             <path d="m18 15-2-2" />
             <path d="m15 18-2-2" />
           </svg>
-          <h1 class="text-xl font-semibold text-gray-800">PrayerKeeper</h1>
+          <h1 class="text-xl font-semibold text-white">PrayerKeeper</h1>
         </div>
       </div>
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 flex items-center justify-center px-6 py-4">
+    <main class="flex-1 flex items-center justify-center px-6 py-4 relative z-10">
       <!-- Slot for main content -->
       <slot></slot>
     </main>
 
     <!-- Minimal Footer -->
-    <footer class="py-3 text-center text-sm text-gray-500">
+    <footer class="py-3 text-center text-sm text-white/80 relative z-10">
     &copy; {{ new Date().getFullYear() }} PrayerKeeper
   </footer>
-</div></template>
+</div>
+</template>
 
 <script setup>
 // No props needed for basic layout
-</script> 
+</script>

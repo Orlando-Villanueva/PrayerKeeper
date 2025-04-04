@@ -3,10 +3,10 @@
     <div class="flex-1 flex flex-col md:flex-row items-center justify-center w-full max-w-6xl">
       <!-- Left Side - Value Proposition -->
       <div class="md:w-1/2 mb-6 md:mb-0 md:pr-8">
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-md">
           Keep Track of Your Prayers
         </h2>
-        <p class="text-gray-600 mb-4">
+        <p class="text-white/90 text-md mb-6 drop-shadow-sm">
           Organize and manage prayer lists for both unbelievers and brethren. <br class="hidden lg:block" /> Add new
           prayers, edit existing ones, and
           resolve them when God answers.
@@ -15,34 +15,22 @@
 
       <!-- Right Side - Auth Forms -->
       <div class="md:w-1/2 w-full max-w-md">
-        <AuthForm v-if="authMode !== 'reset'" v-model:mode="authMode" v-model:email="email" v-model:password="password"
-          :error="authStore.error" :loading="authStore.loading" :submitButtonText="submitButtonText"
+        <AuthForm v-if="authMode !== 'reset'" 
+          v-model:mode="authMode" 
+          v-model:email="email" 
+          v-model:password="password"
+          :error="authStore.error" 
+          :loading="authStore.loading" 
+          :submitButtonText="submitButtonText"
+          @submit="handleSubmit"
+          @twitter-sign-in="handleTwitterSignIn" />
+        <PasswordResetForm v-else 
+          v-model:mode="authMode" 
+          v-model:email="email" 
+          :error="authStore.error"
+          :loading="authStore.loading" 
+          :resetEmailSent="authStore.hasResetEmailSent" 
           @submit="handleSubmit" />
-        <PasswordResetForm v-else v-model:mode="authMode" v-model:email="email" :error="authStore.error"
-          :loading="authStore.loading" :resetEmailSent="authStore.hasResetEmailSent" @submit="handleSubmit" />
-
-        <!-- Social Login Section -->
-        <div class="mt-6">
-          <div class="relative">
-            <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-gray-300"></div>
-            </div>
-            <div class="relative flex justify-center text-sm">
-              <span class="px-2 bg-white text-gray-500">Or continue with</span>
-            </div>
-          </div>
-
-          <div class="mt-6">
-            <button @click="handleTwitterSignIn" :disabled="authStore.loading"
-              class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 hover:cursor-pointer">
-              <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
-              Sign in with X
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   </AuthLayout>
@@ -102,4 +90,4 @@ const handleSubmit = async () => {
     await authStore.resetPassword(email.value);
   }
 };
-</script> 
+</script>

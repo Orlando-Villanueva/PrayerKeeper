@@ -1,20 +1,11 @@
 <template>
   <div class="bg-white rounded-lg shadow-md overflow-hidden">
-    <div class="flex">
-      <button 
-        @click="$emit('update:mode', 'login')" 
-        class="flex-1 text-center py-3 font-medium transition" 
-        :class="mode === 'login' ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-500 border-b-2 border-transparent hover:text-purple-600 hover:border-purple-600'"
-      >
-        Login
-      </button>
-      <button 
-        @click="$emit('update:mode', 'signup')"
-        class="flex-1 text-center py-3 font-medium transition"
-        :class="mode === 'signup' ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-500 border-b-2 border-transparent hover:text-purple-600 hover:border-purple-600'"
-      >
-        Sign Up
-      </button>
+    <!-- Welcome message instead of tabs -->
+    <div class="p-6 pb-0 text-center">
+      <h2 class="text-2xl font-bold text-gray-900" v-if="mode === 'login'">Welcome back</h2>
+      <h2 class="text-2xl font-bold text-gray-900" v-else>Create account</h2>
+      <p class="text-gray-600 mt-1" v-if="mode === 'login'">Login to your PrayerKeeper account</p>
+      <p class="text-gray-600 mt-1" v-else>Sign up for a new PrayerKeeper account</p>
     </div>
     
     <div class="p-4">
@@ -64,7 +55,51 @@
         >
           {{ submitButtonText }}
         </BaseButton>
+        
+        <!-- Sign up prompt at the bottom -->
+        <div class="mt-4 text-center">
+          <p class="text-sm text-gray-600" v-if="mode === 'login'">
+            Don't have an account? 
+            <button 
+              type="button" 
+              class="text-purple-600 font-medium hover:text-purple-800"
+              @click="$emit('update:mode', 'signup')"
+            >
+              Sign up
+            </button>
+          </p>
+          <p class="text-sm text-gray-600" v-else>
+            Already have an account? 
+            <button 
+              type="button" 
+              class="text-purple-600 font-medium hover:text-purple-800"
+              @click="$emit('update:mode', 'login')"
+            >
+              Login
+            </button>
+          </p>
+        </div>
       </form>
+      
+      <!-- Social Login Section -->
+      <div class="mt-6">
+        <div class="flex items-center my-4">
+          <div class="flex-grow border-t border-gray-300"></div>
+          <div class="mx-4 text-gray-500 text-sm">Or continue with</div>
+          <div class="flex-grow border-t border-gray-300"></div>
+        </div>
+
+        <div class="mt-4">
+          <button @click="$emit('twitter-sign-in')" :disabled="loading"
+            class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 hover:cursor-pointer transition-all duration-200">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+            Sign in with X
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -100,5 +135,5 @@ defineProps({
   }
 });
 
-defineEmits(['update:mode', 'update:email', 'update:password', 'submit']);
+defineEmits(['update:mode', 'update:email', 'update:password', 'submit', 'twitter-sign-in']);
 </script> 
