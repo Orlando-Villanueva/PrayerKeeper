@@ -12,7 +12,10 @@
       :placeholder="placeholder"
       :autocomplete="autocomplete"
       :required="required"
-      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
+             focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 
+             hover:border-gray-400
+             transition-all duration-300 ease-in-out"
     />
   </div>
 </template>

@@ -1,11 +1,11 @@
 <template>
-  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+  <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-white/10">
     <!-- Welcome message instead of tabs -->
     <div class="p-6 pb-0 text-center">
-      <h2 class="text-2xl font-bold text-gray-900" v-if="mode === 'login'">Welcome back</h2>
-      <h2 class="text-2xl font-bold text-gray-900" v-else>Create account</h2>
-      <p class="text-gray-600 mt-1" v-if="mode === 'login'">Login to your PrayerKeeper account</p>
-      <p class="text-gray-600 mt-1" v-else>Sign up for a new PrayerKeeper account</p>
+      <h2 class="text-3xl font-bold text-gray-900 tracking-tight" v-if="mode === 'login'">Welcome back</h2>
+      <h2 class="text-3xl font-bold text-gray-900 tracking-tight" v-else>Create account</h2>
+      <p class="text-gray-600 mt-2 tracking-wide text-sm" v-if="mode === 'login'">Login to your PrayerKeeper account</p>
+      <p class="text-gray-600 mt-2 tracking-wide text-sm" v-else>Sign up for a new PrayerKeeper account</p>
     </div>
     
     <div class="p-4">

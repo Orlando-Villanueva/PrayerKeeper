@@ -1,12 +1,12 @@
 <template>
-  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+  <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-white/10">
     <div class="p-4">
-      <h3 class="text-lg font-medium text-gray-900 mb-4">
+      <h3 class="text-2xl font-bold text-gray-900 mb-4 tracking-tight text-center">
         {{ resetEmailSent ? 'Check Your Email' : 'Reset Password' }}
       </h3>
 
       <template v-if="!resetEmailSent">
-        <p class="text-sm text-gray-600 mb-4">
+        <p class="text-sm text-gray-600 mb-4 tracking-wide text-center">
           Enter your email address and we'll send you a link to reset your password.
         </p>
 
@@ -48,7 +48,7 @@
       </template>
 
       <template v-else>
-        <p class="text-sm text-gray-600 mb-4">
+        <p class="text-sm text-gray-600 mb-4 tracking-wide text-center">
           We've sent a password reset link to your email address. Please check your inbox and follow the instructions.
         </p>
         
