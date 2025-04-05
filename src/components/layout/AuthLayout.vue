@@ -2,7 +2,14 @@
   <div class="min-h-screen flex flex-col relative">
     <!-- Background Image with Overlay -->
     <div class="absolute inset-0 z-0">
-      <img src="../../assets/homepage_background.jpg" alt="Background" class="w-full h-full object-cover" />
+      <div class="w-full h-full bg-purple-800"></div>
+      <img 
+        src="/img/homepage_background_optimized.jpg" 
+        alt="Background" 
+        class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500"
+        :class="{'opacity-100': imageLoaded, 'opacity-0': !imageLoaded}"
+        @load="imageLoaded = true" 
+      />
       <div class="absolute inset-0 bg-gradient-to-br from-purple-900/70 via-purple-600/50 to-white/30"></div>
     </div>
     
@@ -39,5 +46,7 @@
 </template>
 
 <script setup>
-// No props needed for basic layout
+import { ref } from 'vue';
+
+const imageLoaded = ref(false);
 </script>
