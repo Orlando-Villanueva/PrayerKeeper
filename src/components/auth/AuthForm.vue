@@ -1,14 +1,14 @@
 <template>
-  <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-white/10">
+  <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-white/20">
     <!-- Welcome message instead of tabs -->
-    <div class="p-6 pb-0 text-center">
-      <h2 class="text-3xl font-bold text-gray-900 tracking-tight" v-if="mode === 'login'">Welcome back</h2>
-      <h2 class="text-3xl font-bold text-gray-900 tracking-tight" v-else>Create account</h2>
-      <p class="text-gray-600 mt-2 tracking-wide text-sm" v-if="mode === 'login'">Login to your PrayerKeeper account</p>
-      <p class="text-gray-600 mt-2 tracking-wide text-sm" v-else>Sign up for a new PrayerKeeper account</p>
+    <div class="p-7 pb-2 text-center">
+      <h2 class="text-3xl font-bold text-gray-800 tracking-tight leading-tight" v-if="mode === 'login'">Welcome back</h2>
+      <h2 class="text-3xl font-bold text-gray-800 tracking-tight leading-tight" v-else>Create account</h2>
+      <p class="text-gray-600 mt-3 tracking-wide text-sm" v-if="mode === 'login'">Login to your PrayerKeeper account</p>
+      <p class="text-gray-600 mt-3 tracking-wide text-sm" v-else>Sign up for a new PrayerKeeper account</p>
     </div>
     
-    <div class="p-4">
+    <div class="px-7 py-5">
       <form @submit.prevent="$emit('submit')">
         <BaseInput
           :id="mode === 'login' ? 'login-email' : 'signup-email'"
@@ -42,8 +42,13 @@
           </template>
         </BaseInput>
         
-        <div v-if="error" class="rounded-md bg-red-50 p-4 mb-3 mt-3">
-          <div class="text-sm text-red-700">{{ error }}</div>
+        <div v-if="error" class="rounded-md bg-red-50/80 backdrop-blur-sm p-4 mb-4 mt-3 border border-red-100/50 shadow-sm transition-all duration-300">
+          <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 mr-2 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            <div class="text-sm font-medium text-red-700">{{ error }}</div>
+          </div>
         </div>
         
         <BaseButton 
@@ -57,12 +62,12 @@
         </BaseButton>
         
         <!-- Sign up prompt at the bottom -->
-        <div class="mt-4 text-center">
+        <div class="mt-6 text-center">
           <p class="text-sm text-gray-600" v-if="mode === 'login'">
             Don't have an account? 
             <button 
               type="button" 
-              class="text-purple-600 font-medium hover:text-purple-800"
+              class="text-purple-600 font-medium hover:text-purple-800 transition-colors duration-200 ml-1"
               @click="$emit('update:mode', 'signup')"
             >
               Sign up
@@ -72,7 +77,7 @@
             Already have an account? 
             <button 
               type="button" 
-              class="text-purple-600 font-medium hover:text-purple-800"
+              class="text-purple-600 font-medium hover:text-purple-800 transition-colors duration-200 ml-1"
               @click="$emit('update:mode', 'login')"
             >
               Login
@@ -82,16 +87,16 @@
       </form>
       
       <!-- Social Login Section -->
-      <div class="mt-6">
+      <div class="mt-8">
         <div class="flex items-center my-4">
-          <div class="flex-grow border-t border-gray-300"></div>
-          <div class="mx-4 text-gray-500 text-sm">Or continue with</div>
-          <div class="flex-grow border-t border-gray-300"></div>
+          <div class="flex-grow border-t border-gray-200"></div>
+          <div class="mx-4 text-gray-500 text-sm font-medium tracking-wide">Or continue with</div>
+          <div class="flex-grow border-t border-gray-200"></div>
         </div>
 
         <div class="mt-4">
           <button @click="$emit('twitter-sign-in')" :disabled="loading"
-            class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 hover:cursor-pointer transition-all duration-200">
+            class="w-full flex justify-center py-2 px-4 border border-gray-200 rounded-md shadow-sm bg-white/80 backdrop-blur-sm text-sm font-medium text-gray-700 hover:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400 hover:cursor-pointer transition-all duration-200">
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
               <path
                 d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />

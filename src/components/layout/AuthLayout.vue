@@ -1,15 +1,20 @@
 <template>
   <div class="min-h-screen flex flex-col relative">
     <!-- Background Image with Overlay -->
-    <div class="absolute inset-0 z-0">
-      <div class="w-full h-full bg-purple-800"></div>
+    <div class="absolute inset-0 z-0 overflow-hidden">
+      <!-- Fallback background color that shows before image loads -->
+      <div class="w-full h-full bg-gradient-to-br from-purple-900 via-purple-700 to-purple-500 absolute inset-0"></div>
+      
+      <!-- Background image with fade-in effect -->
       <img 
         src="/img/homepage_background_optimized.jpg" 
         alt="Background" 
-        class="w-full h-full object-cover absolute inset-0 transition-opacity duration-500"
-        :class="{'opacity-100': imageLoaded, 'opacity-0': !imageLoaded}"
+        class="w-full h-full object-cover absolute inset-0 transition-all duration-700 ease-in-out scale-[1.01]"
+        :class="{'opacity-100 scale-100': imageLoaded, 'opacity-0': !imageLoaded}"
         @load="imageLoaded = true" 
       />
+      
+      <!-- Gradient overlay with enhanced colors -->
       <div class="absolute inset-0 bg-gradient-to-br from-purple-900/70 via-purple-600/50 to-white/30"></div>
     </div>
     
