@@ -13,7 +13,7 @@ A Vue.js application for managing prayer times and requests.
   - Protected routes
   - Persistent sessions
 - Prayer Management:
-  - Categorized lists (Unbelievers, Brethren)
+  - Categorized lists (Unbelievers, Believers)
   - Add, edit, delete prayers
   - Mark prayers as resolved
   - Prayer history tracking
@@ -109,4 +109,3 @@ yarn build
 npm run preview
 # or
 yarn preview
-```
