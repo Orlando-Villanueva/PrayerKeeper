@@ -8,7 +8,13 @@
     <link rel="icon" type="image/png" sizes="48x48" href="/48.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preload" href="/img/homepage_background_optimized.jpg" as="image" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Theme Color for Mobile Browsers -->
+    <meta name="theme-color" content="#6a0dad" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#6a0dad" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#6a0dad" />
     
     <!-- Social Media Preview Tags -->
     <meta property="og:title" content="PrayerKeeper" />
@@ -24,9 +30,8 @@
     <meta name="twitter:image:height" content="600" />
     <title>PrayerKeeper</title>
   </head>
-  <body>
-    <div id="app"></div>
+  <body class="min-h-screen bg-[#6a0dad]">
+    <div id="app" class="min-h-screen bg-[#6a0dad]"></div>
     <script type="module" src="/src/main.js"></script>
-    
   </body>
 </html>
