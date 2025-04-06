@@ -8,37 +8,37 @@
 
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-      <div class="inline-block align-bottom bg-white/90 backdrop-blur-sm rounded-xl text-left overflow-hidden shadow-lg transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full relative w-[95%] mx-auto max-h-[90vh] overflow-y-auto border border-white/20">
+      <div class="inline-block align-bottom bg-white/90 backdrop-blur-sm rounded-xl text-left overflow-hidden shadow-lg transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full relative w-[92%] mx-auto max-h-[90vh] overflow-y-auto border border-white/20">
         <!-- Close button -->
-        <button @click="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none z-10 transition-colors duration-200">
+        <button @click="closeModal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 focus:outline-none z-10 transition-colors duration-200">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
         <!-- Content wrapper -->
-        <div class="px-7 pt-7 pb-2">
+        <div class="px-5 pt-6 pb-2">
           <div class="text-center">
-            <h3 class="text-3xl font-bold text-gray-800 tracking-tight leading-tight" id="modal-title">
+            <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight leading-tight" id="modal-title">
               {{ isEditMode ? 'Edit Prayer' : 'Add New Prayer' }}
             </h3>
-            <p class="text-gray-600 mt-3 tracking-wide text-sm">
+            <p class="text-gray-600 mt-2 tracking-wide text-sm">
               {{ isEditMode ? 'Update your prayer request details' : 'Create a new prayer request' }}
             </p>
           </div>
               
           <!-- Category Tabs (Only shown in Add mode) -->
-          <div v-if="!isEditMode" class="mt-4 mb-4">
-            <div class="flex space-x-3 justify-center">
+          <div v-if="!isEditMode" class="mt-3 mb-3">
+            <div class="flex space-x-2 justify-center">
               <button 
                 @click="prayer.category = 'unbelievers'" 
-                class="px-5 py-2 sm:py-1.5 rounded-full font-medium transition-all duration-200" 
+                class="px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200" 
                 :class="prayer.category === 'unbelievers' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
               >
                 Unbelievers
               </button>
               <button 
                 @click="prayer.category = 'brethren'"
-                class="px-5 py-2 sm:py-1.5 rounded-full font-medium transition-all duration-200"
+                class="px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200"
                 :class="prayer.category === 'brethren' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
               >
                 Brethren
@@ -46,8 +46,8 @@
             </div>
           </div>
               
-          <div class="mt-4">
-            <form id="prayerForm" @submit.prevent="savePrayer" class="space-y-4 px-0.5">
+          <div class="mt-3">
+            <form id="prayerForm" @submit.prevent="savePrayer" class="space-y-3 px-0.5">
               <BaseInput
                 id="person_name"
                 label="Name"
@@ -67,7 +67,7 @@
               />
               
               <!-- Resolved checkbox for edit mode -->
-              <div v-if="isEditMode" class="flex items-center mt-4">
+              <div v-if="isEditMode" class="flex items-center mt-3">
                 <input 
                   id="resolved" 
                   type="checkbox" 
@@ -81,7 +81,7 @@
             </form>
           </div>
         </div>
-        <div class="px-7 py-5 flex flex-col-reverse sm:flex-row sm:justify-end space-y-3 space-y-reverse sm:space-y-0 sm:space-x-3 border-t border-gray-100">
+        <div class="px-5 py-4 flex flex-col-reverse sm:flex-row sm:justify-end space-y-2 space-y-reverse sm:space-y-0 sm:space-x-3 border-t border-gray-100">
           <BaseButton 
             variant="secondary"
             @click="closeModal"

@@ -1,12 +1,12 @@
 <template>
   <div class="overflow-hidden h-full flex flex-col">
-    <div class="px-6 py-6 sm:px-8" :class="headerClass">
-      <div class="flex justify-between items-center">
+    <div class="px-4 py-3 sm:px-8" :class="headerClass">
+      <div class="flex justify-between items-center gap-2">
         <div>
           <h2 class="text-xl font-bold tracking-tight text-gray-900">{{ title }}</h2>
           <button 
             @click="toggleShowResolved"
-            class="mt-3 inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-purple-500 shadow-sm"
+            class="mt-1 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-purple-500 shadow-sm"
             :class="[
               resolvedCount > 0 
                 ? 'bg-green-100 text-green-800 hover:bg-green-200' 
@@ -30,7 +30,7 @@
         <BaseButton 
           @click="openAddModal" 
           variant="primary"
-          class="shadow-md hover:shadow-lg transition-all duration-200 hover:translate-y-[-1px]"
+          class="shadow-md hover:shadow-lg transition-all duration-200 hover:translate-y-[-1px] self-center flex-shrink-0 px-3 py-1.5"
         >
           <span class="flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -41,9 +41,9 @@
         </BaseButton>
       </div>
     </div>
-    <div class="px-6 py-4 sm:px-8 flex-1 overflow-y-auto">
-      <div v-if="prayers.length === 0" class="text-center py-10 px-6">
-        <div class="bg-white/90 backdrop-blur-sm rounded-xl p-6 max-w-md mx-auto shadow-lg border border-white/20">
+    <div class="px-4 py-2 sm:px-8 flex-1 overflow-y-auto">
+      <div v-if="prayers.length === 0" class="text-center py-10 px-4">
+        <div class="bg-white/90 backdrop-blur-sm rounded-xl p-5 max-w-md mx-auto shadow-lg border border-white/20">
           <div class="bg-gradient-to-br from-purple-500 to-purple-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -65,27 +65,27 @@
           </BaseButton>
         </div>
       </div>
-      <ul v-else class="divide-y divide-purple-100">
-        <li v-for="prayer in prayers" :key="prayer.id" class="py-4 group hover:bg-purple-50/50 rounded-lg px-2 -mx-2 my-1">
-          <div class="flex items-center justify-between">
-            <div class="flex-1 min-w-0">
+      <ul v-else class="divide-y divide-purple-100 -mx-1">
+        <li v-for="prayer in prayers" :key="prayer.id" class="py-1.5 group hover:bg-purple-50/50 rounded-lg px-1 mx-1 my-0.5">
+          <div class="flex flex-wrap sm:flex-nowrap items-start sm:items-center justify-between gap-2">
+            <div class="flex-1 min-w-0 mb-1 sm:mb-0">
               <p class="text-base font-semibold text-gray-900 tracking-wide" :class="{ 'line-through text-gray-500': prayer.resolved }">
                 {{ prayer.person_name }}
               </p>
-              <p v-if="prayer.note" class="mt-1.5 text-sm text-gray-600 leading-relaxed" :class="{ 'line-through text-gray-400': prayer.resolved }">
+              <p v-if="prayer.note" class="mt-1 text-sm text-gray-600 leading-relaxed" :class="{ 'line-through text-gray-400': prayer.resolved }">
                 {{ prayer.note }}
               </p>
-              <span v-if="prayer.resolved" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-2 shadow-sm">
+              <span v-if="prayer.resolved" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-1.5 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
                 {{ category === 'unbelievers' ? 'Converted' : 'Resolved' }}
               </span>
             </div>
-            <div class="flex space-x-1 opacity-70 group-hover:opacity-100 transition-opacity duration-200">
+            <div class="flex space-x-2 opacity-70 group-hover:opacity-100 transition-opacity duration-200 ml-1">
               <button 
                 @click="prayerActions.toggleResolved(prayer)" 
-                class="p-2 rounded-full text-gray-500 hover:text-green-600 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 transition-colors duration-200"
+                class="p-1 rounded-full text-gray-500 hover:text-green-600 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 transition-colors duration-200"
                 :title="prayer.resolved ? (category === 'unbelievers' ? 'Mark as not converted' : 'Mark as unresolved') : (category === 'unbelievers' ? 'Mark as converted' : 'Mark as resolved')"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -94,7 +94,7 @@
               </button>
               <button 
                 @click="openEditModal(prayer)" 
-                class="p-2 rounded-full text-gray-500 hover:text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-200"
+                class="p-1 rounded-full text-gray-500 hover:text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-200"
                 title="Edit prayer"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -103,7 +103,7 @@
               </button>
               <button 
                 @click="prayerActions.deletePrayer(prayer)" 
-                class="p-2 rounded-full text-gray-500 hover:text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-all duration-200"
+                class="p-1 rounded-full text-gray-500 hover:text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-all duration-200"
                 title="Delete prayer"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

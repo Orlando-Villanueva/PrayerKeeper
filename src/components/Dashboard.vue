@@ -8,13 +8,13 @@
     <NavBar class="relative z-10" />
 
     <!-- Main Content -->
-    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <main class="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12">
       <!-- Dashboard Header -->
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-extrabold tracking-tight text-white drop-shadow-lg">Prayer Dashboard</h1>
-        <p class="mt-3 text-lg tracking-wide text-white/90 drop-shadow font-medium">Keep track of your prayer requests and celebrations</p>
-        <div class="mt-6 flex justify-center space-x-4">
-          <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-white/20 backdrop-blur-sm text-white shadow-inner">
+      <div class="text-center mb-6 sm:mb-12">
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white drop-shadow-lg">Prayer Dashboard</h1>
+        <p class="mt-2 sm:mt-3 text-base sm:text-lg tracking-wide text-white/90 drop-shadow font-medium">Keep track of your prayer requests and celebrations</p>
+        <div class="mt-4 sm:mt-6 flex justify-center space-x-4">
+          <span class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-medium bg-white/20 backdrop-blur-sm text-white shadow-inner">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
@@ -47,7 +47,7 @@
       </div>
 
       <!-- Prayer Grid -->
-      <div v-else class="grid grid-cols-1 gap-10 md:grid-cols-2">
+      <div v-else class="grid grid-cols-1 gap-6 sm:gap-10 md:grid-cols-2">
         <!-- Prayers for Unbelievers -->
         <PrayerList 
           title="Unbelievers"
@@ -69,7 +69,7 @@
       <BibleVerse
         text="Brethren, pray for us."
         reference="1 Thessalonians 5:25"
-        class="mt-12 bg-white/60 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-purple-100/50 transition-all duration-300 hover:shadow-xl hover:bg-white/70 hover:border-purple-200"
+        class="mt-8 sm:mt-12 bg-white/60 backdrop-blur-sm rounded-xl shadow-lg p-6 sm:p-8 border border-purple-100/50 transition-all duration-300 hover:shadow-xl hover:bg-white/70 hover:border-purple-200"
       />
     </main>
 
@@ -190,5 +190,3 @@ onMounted(async () => {
   background-size: 20px 20px;
 }
 </style>
-
-
