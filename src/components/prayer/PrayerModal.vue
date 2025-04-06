@@ -1,6 +1,6 @@
 <template>
   <div v-if="modelValue" class="fixed z-50 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex items-start justify-center min-h-screen pt-4 px-2 pb-20 text-center sm:items-center sm:p-0">
+    <div class="flex items-start justify-center min-h-screen pt-4 sm:px-2 pb-20 text-center sm:items-center sm:p-0">
       <!-- Background overlay with gradient -->
       <div class="fixed inset-0" aria-hidden="true" @click="closeModal">
         <div class="absolute inset-0 bg-gradient-to-b from-purple-900/90 via-purple-800/85 to-purple-700/80 backdrop-blur-sm"></div>
@@ -8,7 +8,7 @@
 
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-      <div class="inline-block align-bottom bg-white/90 backdrop-blur-sm rounded-xl text-left overflow-hidden shadow-lg transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full relative w-[92%] mx-auto max-h-[90vh] overflow-y-auto border border-white/20">
+      <div class="inline-block align-bottom bg-white/90 backdrop-blur-sm rounded-xl text-left overflow-hidden shadow-lg transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full relative w-[94%] mx-auto max-h-[90vh] overflow-y-auto border border-white/20">
         <!-- Close button -->
         <button @click="closeModal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 focus:outline-none z-10 transition-colors duration-200">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -16,7 +16,7 @@
           </svg>
         </button>
         <!-- Content wrapper -->
-        <div class="px-5 pt-6 pb-2">
+        <div class="sm:px-5 px-3 pt-6 pb-2">
           <div class="text-center">
             <h3 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight leading-tight" id="modal-title">
               {{ isEditMode ? 'Edit Prayer' : 'Add New Prayer' }}
@@ -81,7 +81,7 @@
             </form>
           </div>
         </div>
-        <div class="px-5 py-4 flex flex-col-reverse sm:flex-row sm:justify-end space-y-2 space-y-reverse sm:space-y-0 sm:space-x-3 border-t border-gray-100">
+        <div class="sm:px-5 px-3 py-4 flex flex-col-reverse sm:flex-row sm:justify-end space-y-2 space-y-reverse sm:space-y-0 sm:space-x-3 border-t border-gray-100">
           <BaseButton 
             variant="secondary"
             @click="closeModal"

@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-white/20">
-    <div class="px-7 py-5">
+  <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-white/20 w-full">
+    <div class="sm:px-5 px-3 py-5">
       <h3 class="text-3xl font-bold text-gray-800 mb-4 tracking-tight leading-tight text-center">
         {{ resetEmailSent ? 'Check Your Email' : 'Reset Password' }}
       </h3>

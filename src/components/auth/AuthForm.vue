@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-white/20 transition-all duration-200 hover:shadow-xl hover:translate-y-[-1px]">
+  <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-white/20 transition-all duration-200 hover:shadow-xl hover:translate-y-[-1px] w-full">
     <!-- Welcome message instead of tabs -->
     <div class="p-7 pb-2 text-center">
       <h2 class="text-3xl font-bold text-gray-800 tracking-tight leading-tight" v-if="mode === 'login'">Welcome back</h2>
@@ -8,7 +8,7 @@
       <p class="text-gray-600 mt-3 tracking-wide text-sm" v-else>Sign up for a new PrayerKeeper account</p>
     </div>
     
-    <div class="px-7 py-5">
+    <div class="sm:px-5 px-3 py-5">
       <form @submit.prevent="$emit('submit')">
         <BaseInput
           :id="mode === 'login' ? 'login-email' : 'signup-email'"

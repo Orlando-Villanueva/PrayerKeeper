@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-hidden h-full flex flex-col">
-    <div class="px-4 py-3 sm:px-8" :class="headerClass">
+    <div class="px-3 md:px-4 py-3 sm:px-8" :class="headerClass">
       <div class="flex justify-between items-center gap-2">
         <div>
           <h2 class="text-xl font-bold tracking-tight text-gray-900">{{ title }}</h2>
@@ -41,7 +41,7 @@
         </BaseButton>
       </div>
     </div>
-    <div class="px-4 py-2 sm:px-8 flex-1 overflow-y-auto">
+    <div class="px-3 md:px-4 py-2 sm:px-8 flex-1 overflow-y-auto">
       <div v-if="prayers.length === 0" class="text-center py-10 px-4">
         <div class="bg-white/90 backdrop-blur-sm rounded-xl p-5 max-w-md mx-auto shadow-lg border border-white/20">
           <div class="bg-gradient-to-br from-purple-500 to-purple-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">

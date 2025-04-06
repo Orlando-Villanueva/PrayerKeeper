@@ -38,7 +38,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 flex items-center justify-center px-6 py-4 relative z-10">
+    <main class="flex-1 flex items-center justify-center px-3 md:px-6 py-4 relative z-10">
       <!-- Slot for main content -->
       <slot></slot>
     </main>
