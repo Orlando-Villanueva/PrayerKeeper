@@ -11,7 +11,12 @@
       :placeholder="placeholder"
       :rows="rows"
       :required="required"
-      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+      class="w-full px-3 py-2.5 border border-gray-200 rounded-md shadow-sm 
+             bg-white/80 backdrop-blur-sm
+             focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-400 
+             hover:border-purple-200
+             transition-all duration-300 ease-in-out
+             mt-1"
     ></textarea>
   </div>
 </template>
