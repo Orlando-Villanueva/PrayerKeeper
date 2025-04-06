@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-white/20">
+  <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-white/20 transition-all duration-200 hover:shadow-xl hover:translate-y-[-1px]">
     <!-- Welcome message instead of tabs -->
     <div class="p-7 pb-2 text-center">
       <h2 class="text-3xl font-bold text-gray-800 tracking-tight leading-tight" v-if="mode === 'login'">Welcome back</h2>
@@ -34,7 +34,7 @@
           <template v-if="mode === 'login'" #button>
             <button
               type="button"
-              class="text-sm text-purple-600 hover:text-purple-800"
+              class="text-sm text-purple-600 hover:text-purple-800 transition-all duration-200"
               @click="$emit('update:mode', 'reset')"
             >
               Forgot your password?
@@ -56,7 +56,8 @@
           :disabled="loading"
           :loading="loading"
           variant="primary"
-          class="mt-2 w-full"
+          class="mt-2 w-full shadow-md hover:shadow-lg transition-all duration-200 hover:translate-y-[-1px]"
+          @click="$emit('submit')"
         >
           {{ submitButtonText }}
         </BaseButton>
@@ -67,7 +68,7 @@
             Don't have an account? 
             <button 
               type="button" 
-              class="text-purple-600 font-medium hover:text-purple-800 transition-colors duration-200 ml-1"
+              class="text-purple-600 font-medium hover:text-purple-800 transition-all duration-200 ml-1"
               @click="$emit('update:mode', 'signup')"
             >
               Sign up
@@ -77,7 +78,7 @@
             Already have an account? 
             <button 
               type="button" 
-              class="text-purple-600 font-medium hover:text-purple-800 transition-colors duration-200 ml-1"
+              class="text-purple-600 font-medium hover:text-purple-800 transition-all duration-200 ml-1"
               @click="$emit('update:mode', 'login')"
             >
               Login
@@ -96,7 +97,7 @@
 
         <div class="mt-4">
           <button @click="$emit('twitter-sign-in')" :disabled="loading"
-            class="w-full flex justify-center py-2 px-4 border border-gray-200 rounded-md shadow-sm bg-white/80 backdrop-blur-sm text-sm font-medium text-gray-700 hover:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400 hover:cursor-pointer transition-all duration-200">
+            class="w-full flex justify-center py-2 px-4 border border-gray-200 rounded-md shadow-sm bg-white/80 backdrop-blur-sm text-sm font-medium text-gray-700 hover:bg-white hover:shadow-lg hover:translate-y-[-1px] focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400 hover:cursor-pointer transition-all duration-200">
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
               <path
                 d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
