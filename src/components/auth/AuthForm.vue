@@ -30,6 +30,7 @@
           type="password"
           :autocomplete="mode === 'login' ? 'current-password' : 'new-password'"
           :required="true"
+          @keydown.enter="$emit('submit')"
         >
           <template v-if="mode === 'login'" #button>
             <button
