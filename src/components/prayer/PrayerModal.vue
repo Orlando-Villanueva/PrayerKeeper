@@ -41,7 +41,7 @@
                 class="px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200"
                 :class="prayer.category === 'brethren' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
               >
-                Brethren
+                Believers
               </button>
             </div>
           </div>

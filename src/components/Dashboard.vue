@@ -56,9 +56,9 @@
           class="bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-sm rounded-xl shadow-xl border border-purple-100/50 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:translate-y-[-2px] hover:border-purple-200"
         />
 
-        <!-- Prayers for Brethren -->
+        <!-- Prayers for Believers -->
         <PrayerList 
-          title="Brethren"
+          title="Believers"
           category="brethren"
           header-class="bg-gradient-to-r from-purple-300 to-purple-200 border-b border-purple-300/70"
           class="bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-sm rounded-xl shadow-xl border border-purple-100/50 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:translate-y-[-2px] hover:border-purple-200"
