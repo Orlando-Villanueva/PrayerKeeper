@@ -46,10 +46,9 @@
                     </div>
                   </div>
                   
-                  <!-- Name & Email -->
+                  <!-- Name -->
                   <div class="flex flex-col ml-2 mr-1">
                     <span class="text-sm font-semibold text-gray-800">{{ displayName }}</span>
-                    <span class="text-xs text-gray-600">{{ authStore.user.email }}</span>
                   </div>
                   
                   <!-- Dropdown indicator -->
