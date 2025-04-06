@@ -1,12 +1,10 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <router-view />
-    <InstallPrompt />
   </div>
 </template>
 
 <script setup>
-import InstallPrompt from './components/InstallPrompt.vue';
 // Nothing needed here - routing is handled by vue-router
 </script>
 
