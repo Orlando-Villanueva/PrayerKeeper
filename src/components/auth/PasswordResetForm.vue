@@ -45,6 +45,7 @@
               :disabled="loading"
               :loading="loading"
               variant="primary"
+              @click="$emit('submit')"
             >
               {{ loading ? 'Sending...' : 'Send Reset Link' }}
             </BaseButton>
@@ -94,4 +95,4 @@ defineProps({
 });
 
 defineEmits(['update:mode', 'update:email', 'submit']);
-</script> 
+</script>
