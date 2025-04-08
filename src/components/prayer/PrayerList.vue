@@ -2,30 +2,28 @@
   <div class="overflow-hidden h-full flex flex-col">
     <div class="px-3 md:px-4 py-3 sm:px-8" :class="headerClass">
       <div class="flex justify-between items-center gap-2">
-        <div>
+        <div class="flex flex-col">
           <h2 class="text-xl font-bold tracking-tight text-gray-900">{{ title }}</h2>
-          <button 
-            @click="toggleShowResolved"
-            class="mt-1 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-purple-500 shadow-sm"
-            :class="[
-              resolvedCount > 0 
-                ? 'bg-green-100 text-green-800 hover:bg-green-200' 
-                : 'bg-red-100 text-red-800 hover:bg-red-200'
-            ]"
-          >
-            <span v-if="showResolved" class="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-              Hide Resolved ({{ resolvedCount }})
-            </span>
-            <span v-else class="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-              Show Resolved ({{ resolvedCount }})
-            </span>
-          </button>
+          <div class="h-6 flex items-end"> 
+            <button 
+              v-if="resolvedCount > 0"
+              @click="toggleShowResolved"
+              class="inline-flex items-center text-xs font-medium text-purple-600 hover:text-purple-800 focus:outline-none focus:underline transition-colors duration-150"
+            >
+              <span v-if="showResolved" class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+                Hide Resolved ({{ resolvedCount }})
+              </span>
+              <span v-else class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                Show Resolved ({{ resolvedCount }})
+              </span>
+            </button>
+          </div>
         </div>
         <BaseButton 
           @click="openAddModal" 
