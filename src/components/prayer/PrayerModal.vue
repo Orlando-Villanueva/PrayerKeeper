@@ -62,7 +62,7 @@
                 label="Prayer Details (Optional)"
                 v-model="prayer.note"
                 name="note"
-                rows="4"
+                :rows="4"
                 placeholder="Add details about your prayer request"
               />
               
@@ -83,7 +83,7 @@
         </div>
         <div class="sm:px-5 px-3 py-4 flex flex-col-reverse sm:flex-row sm:justify-end space-y-2 space-y-reverse sm:space-y-0 sm:space-x-3 border-t border-gray-100">
           <BaseButton 
-            variant="secondary"
+            variant="ghost"
             @click="closeModal"
             class="w-full sm:w-auto"
           >
@@ -99,7 +99,6 @@
             type="submit"
             form="prayerForm"
             :loading="prayerStore.loading"
-            :disabled="!isFormValid"
             class="w-full sm:w-auto"
           >
             <template #icon v-if="!prayerStore.loading">

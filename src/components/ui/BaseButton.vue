@@ -28,7 +28,7 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'primary',
-    validator: (value) => ['primary', 'secondary', 'danger'].includes(value)
+    validator: (value) => ['primary', 'secondary', 'danger', 'ghost'].includes(value)
   },
   type: {
     type: String,
@@ -53,6 +53,7 @@ const buttonClasses = computed(() => {
     primary: 'border-transparent bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-500 shadow-md disabled:opacity-50 disabled:cursor-not-allowed',
     secondary: 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-purple-500 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed',
     danger: 'border-transparent bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-md disabled:opacity-50 disabled:cursor-not-allowed',
+    ghost: 'border-gray-200/50 bg-transparent text-gray-600 hover:text-gray-700 hover:bg-gray-50/50 focus:ring-gray-400 shadow-none disabled:opacity-50 disabled:cursor-not-allowed',
   };
   
   return classes[props.variant];
