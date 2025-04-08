@@ -6,9 +6,8 @@
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-md">
           Keep Track of Your Prayers
         </h2>
-        <p class="text-white/90 text-lg md:text-xl drop-shadow-sm">
-          Organize and manage prayer lists for both unbelievers and believers. Add new
-          prayers, edit existing ones, and resolve them when God answers.
+        <p class="text-white/90 text-base md:text-xl drop-shadow-sm">
+          Organize and manage prayer lists for both unbelievers and believers. <span class="hidden md:inline">Add new prayers, edit existing ones, and resolve them when God answers.</span><span class="md:hidden">Track and update your prayer journey.</span>
         </p>
       </div>
 
