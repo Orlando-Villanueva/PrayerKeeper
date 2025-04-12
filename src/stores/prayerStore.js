@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { supabase } from '../db/supabase';
+import { useAuthStore } from './authStore';
 
 export const usePrayerStore = defineStore('prayer', {
     state: () => ({
@@ -35,13 +36,12 @@ export const usePrayerStore = defineStore('prayer', {
             this.error = null;
 
             try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) throw new Error('User not authenticated');
+                const authStore = useAuthStore();
+                if (!authStore.isAuthenticated) throw new Error('User not authenticated');
 
                 const { data, error } = await supabase
                     .from('prayers')
                     .select('*')
-                    .eq('user_id', user.id)
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
@@ -63,14 +63,14 @@ export const usePrayerStore = defineStore('prayer', {
                 if (showLoading) this.loading = true;
                 this.error = null;
 
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) throw new Error('User not authenticated');
+                const authStore = useAuthStore();
+                if (!authStore.isAuthenticated) throw new Error('User not authenticated');
 
                 const { data, error } = await supabase
                     .from('prayers')
                     .insert([{
                         ...prayerData,
-                        user_id: user.id,
+                        user_id: authStore.user.id, // Required for RLS policy
                         resolved: false,
                         created_at: new Date().toISOString()
                     }])
@@ -97,14 +97,13 @@ export const usePrayerStore = defineStore('prayer', {
                 if (showLoading) this.loading = true;
                 this.error = null;
 
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) throw new Error('User not authenticated');
+                const authStore = useAuthStore();
+                if (!authStore.isAuthenticated) throw new Error('User not authenticated');
 
                 const { data, error } = await supabase
                     .from('prayers')
                     .update(updates)
                     .eq('id', id)
-                    .eq('user_id', user.id)
                     .select()
                     .single();
 
@@ -138,9 +137,8 @@ export const usePrayerStore = defineStore('prayer', {
             try {
                 this.error = null;
 
-                // Get current user ID
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) throw new Error('User not authenticated');
+                const authStore = useAuthStore();
+                if (!authStore.isAuthenticated) throw new Error('User not authenticated');
 
                 // Optimistically update UI
                 this.prayers = this.prayers.filter(prayer => prayer.id !== id);
@@ -149,8 +147,7 @@ export const usePrayerStore = defineStore('prayer', {
                 const { error } = await supabase
                     .from('prayers')
                     .delete()
-                    .eq('id', id)
-                    .eq('user_id', user.id);
+                    .eq('id', id);
 
                 if (error) throw error;
 
