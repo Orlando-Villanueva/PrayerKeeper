@@ -11,7 +11,7 @@ Enable users to create and manage their own personal prayer categories, replacin
 - Select categories when creating prayers
 - See prayers organized by category in a responsive grid layout
 
-## 1. Database Setup in Supabase ✅
+## 1. Database Setup in Supabase 
 
 - [x] Create `categories` table with appropriate fields
   - Fields: id, user_id, name, order, created_at, updated_at, is_visible
@@ -40,9 +40,9 @@ Enable users to create and manage their own personal prayer categories, replacin
 
 ## 2. Frontend Implementation
 
-### 2.1 Create Category Store
+### 2.1 Create Category Store ✅
 
-- [ ] Create categoryStore.js with state and actions
+- [x] Create categoryStore.js with state and actions
   - State: categories, loading, error
   - Getters: sortedCategories
   - Actions:
