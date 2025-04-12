@@ -126,9 +126,11 @@ export const usePrayerStore = defineStore('prayer', {
         async resolvePrayer(id, resolved = true) {
             // Update UI optimistically
             const prayer = this.prayers.find(p => p.id === id);
-            if (prayer) {
-                prayer.resolved = resolved;
+            if (!prayer) {
+                return { success: false, error: 'Prayer not found' };
             }
+
+            prayer.resolved = resolved;
 
             return this.updatePrayer(id, { resolved }, false);
         },
