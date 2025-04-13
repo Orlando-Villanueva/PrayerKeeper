@@ -48,21 +48,14 @@
 
       <!-- Prayer Grid -->
       <div v-else class="grid grid-cols-1 gap-6 sm:gap-10 md:grid-cols-2">
-        <!-- Prayers for Unbelievers -->
-        <PrayerList 
-          title="Unbelievers"
-          category="unbelievers"
-          header-class="bg-gradient-to-r from-purple-300 to-purple-200 border-b border-purple-300/70"
-          class="bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-sm rounded-xl shadow-xl border border-purple-100/50 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:translate-y-[-2px] hover:border-purple-200"
-        />
-
-        <!-- Prayers for Believers -->
-        <PrayerList 
-          title="Believers"
-          category="brethren"
-          header-class="bg-gradient-to-r from-purple-300 to-purple-200 border-b border-purple-300/70"
-          class="bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-sm rounded-xl shadow-xl border border-purple-100/50 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:translate-y-[-2px] hover:border-purple-200"
-        />
+        <template v-for="category in categoryStore.sortedVisibleCategories" :key="category.id">
+          <PrayerList 
+            :title="category.name"
+            :category-id="category.id"
+            header-class="bg-gradient-to-r from-purple-300 to-purple-200 border-b border-purple-300/70"
+            class="bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-sm rounded-xl shadow-xl border border-purple-100/50 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:translate-y-[-2px] hover:border-purple-200"
+          />
+        </template>
       </div>
       
       <!-- Bible Verse -->
@@ -87,6 +80,7 @@
 <script setup>
 import { ref, provide, onMounted, computed } from 'vue';
 import { usePrayerStore } from '../stores/prayerStore';
+import { useCategoryStore } from '../stores/categoryStore';
 import NavBar from './navbar/NavBar.vue';
 import PrayerList from './prayer/PrayerList.vue';
 import PrayerModal from './prayer/PrayerModal.vue';
@@ -94,6 +88,7 @@ import BibleVerse from './ui/BibleVerse.vue';
 
 // Initialize stores
 const prayerStore = usePrayerStore();
+const categoryStore = useCategoryStore();
 
 // Modal state
 const isModalVisible = ref(false);
@@ -102,17 +97,17 @@ const currentPrayer = ref({
   id: null,
   person_name: '',
   note: '',
-  category: 'unbelievers',
+  category_id: null,
   resolved: false
 });
 
 // Open modal for adding a new prayer
-const openAddModal = (category) => {
+const openAddModal = (categoryId) => {
   isEditMode.value = false;
   currentPrayer.value = {
     person_name: '',
     note: '',
-    category,
+    category_id: categoryId,
     resolved: false
   };
   isModalVisible.value = true;
@@ -176,9 +171,12 @@ const currentDate = computed(() => {
   }).format(now);
 });
 
-// Fetch prayers when component mounts
+// Fetch prayers and categories when component mounts
 onMounted(async () => {
-  await prayerStore.fetchPrayers();
+  await Promise.all([
+    prayerStore.fetchPrayers(),
+    categoryStore.fetchCategories()
+  ]);
 });
 </script>
 

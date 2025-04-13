@@ -48,7 +48,7 @@
             </svg>
           </div>
           <h3 class="text-lg font-bold text-gray-800 mb-2">No prayers added yet</h3>
-          <p class="text-gray-600 mb-4">{{ category === 'unbelievers' ? 'Start praying for those who need to know Christ.' : 'Start praying for your brothers and sisters in Christ.' }}</p>
+          <p class="text-gray-600 mb-4">Start praying and make a difference in someone's life.</p>
           <BaseButton 
             @click="openAddModal" 
             variant="primary"
@@ -77,14 +77,14 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
-                {{ category === 'unbelievers' ? 'Converted' : 'Resolved' }}
+                Resolved
               </span>
             </div>
             <div class="flex space-x-2 opacity-70 group-hover:opacity-100 transition-opacity duration-200 ml-1">
               <button 
                 @click="prayerActions.toggleResolved(prayer)" 
                 class="p-1 rounded-full text-gray-500 hover:text-green-600 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 transition-colors duration-200"
-                :title="prayer.resolved ? (category === 'unbelievers' ? 'Mark as not converted' : 'Mark as unresolved') : (category === 'unbelievers' ? 'Mark as converted' : 'Mark as resolved')"
+                :title="prayer.resolved ? 'Mark as unresolved' : 'Mark as resolved'"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -126,7 +126,7 @@ const props = defineProps({
     type: String,
     required: true
   },
-  category: {
+  categoryId: {
     type: String,
     required: true
   },
@@ -150,12 +150,12 @@ const toggleShowResolved = () => {
 
 // Get filtered prayers from store
 const prayers = computed(() => 
-  prayerStore.prayersByCategory(props.category, showResolved.value)
+  prayerStore.prayersByCategory(props.categoryId, showResolved.value)
 );
 
 // Get resolved count from store
 const resolvedCount = computed(() => 
-  prayerStore.resolvedCountByCategory(props.category)
+  prayerStore.resolvedCountByCategory(props.categoryId)
 );
 
 const headerClass = computed(() => {
@@ -164,7 +164,7 @@ const headerClass = computed(() => {
 
 // Functions that interact with the modal
 const openAddModal = () => {
-  modalFunctions.openAddModal(props.category);
+  modalFunctions.openAddModal(props.categoryId);
 };
 
 const openEditModal = (prayer) => {

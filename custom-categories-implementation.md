@@ -87,13 +87,27 @@ Enable users to create and manage their own personal prayer categories, replacin
   - Maintains optimistic UI updates
   - No unnecessary category_id inclusion
 
-### 2.3 Update Dashboard
+### 2.3 Update Dashboard 
 
-- [ ] Modify Dashboard.vue to display dynamic categories
+- [x] Modify Dashboard.vue to display dynamic categories
   - Replace hardcoded category sections with dynamic generation
-  - Add "Manage Categories" button above prayer lists
+  - Use v-for with sortedVisibleCategories from categoryStore
   - Implement responsive grid layout (2 columns for larger screens)
   - Maintain consistent purple styling for all category cards
+
+**Implementation Notes:**
+- Enhanced Dashboard.vue:
+  - Replaced static category sections with dynamic v-for loop
+  - Uses sortedVisibleCategories getter for proper ordering
+  - Parallel loading of prayers and categories for better performance
+- Updated PrayerList.vue:
+  - Converted to use category_id instead of string categories
+  - Generic, reusable component that works with any category
+  - Enhanced empty state messaging
+- State Management:
+  - Proper initialization of both prayer and category stores
+  - Optimistic UI updates for better user experience
+  - Proper error handling and loading states
 
 ### 2.4 Update Prayer Modal
 
