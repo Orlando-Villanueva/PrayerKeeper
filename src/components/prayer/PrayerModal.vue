@@ -26,24 +26,24 @@
             </p>
           </div>
               
-          <!-- Category Tabs (Only shown in Add mode) -->
-          <div v-if="!isEditMode" class="mt-3 mb-3">
-            <div class="flex space-x-2 justify-center">
-              <button 
-                @click="prayer.category = 'unbelievers'" 
-                class="px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200" 
-                :class="prayer.category === 'unbelievers' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+          <!-- Category Selection -->
+          <div class="mt-3 mb-3">
+            <BaseSelect
+              id="category"
+              label="Category"
+              v-model="prayer.category_id"
+              name="category"
+              required
+              placeholder="Select a category"
+            >
+              <option 
+                v-for="category in categoryStore.sortedVisibleCategories" 
+                :key="category.id" 
+                :value="category.id"
               >
-                Unbelievers
-              </button>
-              <button 
-                @click="prayer.category = 'brethren'"
-                class="px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200"
-                :class="prayer.category === 'brethren' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
-              >
-                Believers
-              </button>
-            </div>
+                {{ category.name }}
+              </option>
+            </BaseSelect>
           </div>
               
           <div class="mt-3">
@@ -75,7 +75,7 @@
                   class="h-5 w-5 text-purple-600 focus:ring-purple-500 border-gray-300 rounded transition-colors duration-200"
                 >
                 <label for="resolved" class="ml-2 block text-sm text-gray-700">
-                  Mark as {{ prayer.category === 'unbelievers' ? 'converted' : 'resolved' }}
+                  Mark as resolved
                 </label>
               </div>
             </form>
@@ -117,9 +117,11 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { usePrayerStore } from '../../stores/prayerStore';
+import { useCategoryStore } from '../../stores/categoryStore';
 import BaseInput from '../ui/BaseInput.vue';
 import BaseTextarea from '../ui/BaseTextarea.vue';
 import BaseButton from '../ui/BaseButton.vue';
+import BaseSelect from '../ui/BaseSelect.vue';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -130,6 +132,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'save']);
 
 const prayerStore = usePrayerStore();
+const categoryStore = useCategoryStore();
 const prayer = ref({ ...props.prayerData });
 
 // Update local prayer data when props change
@@ -151,6 +154,11 @@ const isFormValid = computed(() => {
 const savePrayer = async () => {
   if (!isFormValid.value) {
     alert('Please enter a name');
+    return;
+  }
+
+  if (!prayer.value.category_id) {
+    alert('Please select a category');
     return;
   }
 

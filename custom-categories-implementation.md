@@ -111,10 +111,27 @@ Enable users to create and manage their own personal prayer categories, replacin
 
 ### 2.4 Update Prayer Modal
 
-- [ ] Modify PrayerModal.vue to include category selection
+- [x] Modify PrayerModal.vue to include category selection
   - Add dropdown for selecting from existing categories
-  - Add option to create new category from modal
   - Update form submission to include category_id
+  - Remove legacy category field usage
+
+**Implementation Notes:**
+- Enhanced PrayerModal.vue:
+  - Created reusable BaseSelect component with modern styling:
+    - Custom dropdown arrow with proper positioning
+    - Consistent purple theme focus/hover states
+    - Improved text contrast and visual hierarchy
+    - Mobile-friendly touch targets
+  - Integrated with categoryStore:
+    - Uses sortedVisibleCategories getter for dropdown options
+    - Leverages existing category data from Dashboard
+  - Form Validation:
+    - Required category selection with clear error message
+    - Maintains existing name validation
+  - Removed legacy features:
+    - Eliminated hardcoded category tabs
+    - Simplified resolved checkbox UI
 
 ### 2.5 New Category Management Page
 
