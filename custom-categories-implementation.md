@@ -40,7 +40,7 @@ Enable users to create and manage their own personal prayer categories, replacin
 
 ## 2. Frontend Implementation
 
-### 2.1 Create Category Store ✅
+### 2.1 Create Category Store 
 
 - [x] Create categoryStore.js with state and actions
   - State: categories, loading, error
@@ -53,14 +53,56 @@ Enable users to create and manage their own personal prayer categories, replacin
     - reorderCategories
     - toggleCategoryVisibility
 
-### 2.2 Update Prayer Store
+**Implementation Notes:**
+- Store follows Pinia pattern with state, getters, and actions
+- Added user_id filtering in fetchCategories for proper data isolation
+- Implemented optimistic UI updates for better UX
+- Database trigger handles category reordering on deletion
+- Added JSDoc documentation for better maintainability
+- Additional getters added:
+  - visibleCategories: Filters out hidden categories
+  - sortedVisibleCategories: Combines sorting and visibility
 
-- [ ] Modify prayerStore.js to use category_id instead of category
+### 2.2 Update Prayer Store 
+
+- [x] Modify prayerStore.js to use category_id instead of category
   - Update prayersByCategory to filter by category_id
   - Update addPrayer and updatePrayer to handle category_id
   - Update resolvedCountByCategory to use category_id
 
-### 2.3 New Category Management Page
+**Implementation Notes:**
+- Updated getters to use category_id:
+  - prayersByCategory now filters by category_id instead of category
+  - resolvedCountByCategory uses category_id for counting
+- Enhanced addPrayer validation:
+  - Validates required fields (category_id, person_name) based on schema
+  - Proper error messages for missing fields
+- Simplified updatePrayer:
+  - Removed redundant category_id validation
+  - Relies on database constraints for data integrity
+  - Maintains optimistic UI updates
+- Added user_id filter to fetchPrayers for proper data isolation
+- Optimized resolvePrayer:
+  - Simplified to only update resolved status
+  - Maintains optimistic UI updates
+  - No unnecessary category_id inclusion
+
+### 2.3 Update Dashboard
+
+- [ ] Modify Dashboard.vue to display dynamic categories
+  - Replace hardcoded category sections with dynamic generation
+  - Add "Manage Categories" button above prayer lists
+  - Implement responsive grid layout (2 columns for larger screens)
+  - Maintain consistent purple styling for all category cards
+
+### 2.4 Update Prayer Modal
+
+- [ ] Modify PrayerModal.vue to include category selection
+  - Add dropdown for selecting from existing categories
+  - Add option to create new category from modal
+  - Update form submission to include category_id
+
+### 2.5 New Category Management Page
 
 - [ ] Create CategoryManagement.vue component
   - Add route in router.js: /manage-categories
@@ -70,21 +112,6 @@ Enable users to create and manage their own personal prayer categories, replacin
   - Add drag-and-drop reordering functionality
   - Add toggle for category visibility
   - Apply consistent purple styling (from-purple-300 to-purple-200)
-
-### 2.4 Update Dashboard
-
-- [ ] Modify Dashboard.vue to display dynamic categories
-  - Replace hardcoded category sections with dynamic generation
-  - Add "Manage Categories" button above prayer lists
-  - Implement responsive grid layout (2 columns for larger screens)
-  - Maintain consistent purple styling for all category cards
-
-### 2.5 Update Prayer Modal
-
-- [ ] Modify PrayerModal.vue to include category selection
-  - Add dropdown for selecting from existing categories
-  - Add option to create new category from modal
-  - Update form submission to include category_id
 
 ### 2.6 User Onboarding Flow
 

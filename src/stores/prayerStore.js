@@ -10,9 +10,9 @@ export const usePrayerStore = defineStore('prayer', {
     }),
 
     getters: {
-        // Get filtered prayers by category with optional resolved filter
-        prayersByCategory: (state) => (category, showResolved) => {
-            const prayers = state.prayers.filter(prayer => prayer.category === category);
+        // Get filtered prayers by category_id with optional resolved filter
+        prayersByCategory: (state) => (categoryId, showResolved) => {
+            const prayers = state.prayers.filter(prayer => prayer.category_id === categoryId);
             if (showResolved) {
                 return [...prayers].sort((a, b) => {
                     if (a.resolved === b.resolved) return 0;
@@ -22,10 +22,10 @@ export const usePrayerStore = defineStore('prayer', {
             return prayers.filter(prayer => !prayer.resolved);
         },
 
-        // Get count of resolved prayers by category
-        resolvedCountByCategory: (state) => (category) => {
+        // Get count of resolved prayers by category_id
+        resolvedCountByCategory: (state) => (categoryId) => {
             return state.prayers.filter(prayer =>
-                prayer.category === category && prayer.resolved
+                prayer.category_id === categoryId && prayer.resolved
             ).length;
         }
     },
@@ -42,6 +42,7 @@ export const usePrayerStore = defineStore('prayer', {
                 const { data, error } = await supabase
                     .from('prayers')
                     .select('*')
+                    .eq('user_id', authStore.user.id)
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
@@ -66,11 +67,18 @@ export const usePrayerStore = defineStore('prayer', {
                 const authStore = useAuthStore();
                 if (!authStore.isAuthenticated) throw new Error('User not authenticated');
 
+                // Validate required fields based on schema
+                const requiredFields = ['category_id', 'person_name'];
+                const missingFields = requiredFields.filter(field => !prayerData[field]);
+                if (missingFields.length > 0) {
+                    throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+                }
+
                 const { data, error } = await supabase
                     .from('prayers')
                     .insert([{
                         ...prayerData,
-                        user_id: authStore.user.id, // Required for RLS policy
+                        user_id: authStore.user.id,
                         resolved: false,
                         created_at: new Date().toISOString()
                     }])
