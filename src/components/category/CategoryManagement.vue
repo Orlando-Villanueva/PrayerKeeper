@@ -28,27 +28,14 @@
       </PageHeader>
       
       <!-- Loading State -->
-      <div v-if="categoryStore.loading" class="flex flex-col justify-center items-center py-16">
-        <div class="animate-spin rounded-full h-14 w-14 border-t-2 border-b-2 border-white mb-4"></div>
-        <p class="text-white/80 text-lg animate-pulse">Loading categories...</p>
-      </div>
+      <LoadingState v-if="categoryStore.loading" message="Loading categories..." />
 
       <!-- Error State -->
-      <div v-else-if="categoryStore.error" class="bg-red-50/90 p-6 rounded-xl shadow-lg mb-8 backdrop-blur-sm">
-        <div class="flex">
-          <div class="flex-shrink-0">
-            <svg class="h-6 w-6 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <div class="ml-4">
-            <h3 class="text-base font-medium text-red-800">{{ categoryStore.error }}</h3>
-            <div class="mt-3">
-              <button @click="categoryStore.resetError" class="text-sm font-medium text-red-600 hover:text-red-500 transition-colors duration-200">Dismiss</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ErrorState 
+        v-else-if="categoryStore.error" 
+        :message="categoryStore.error" 
+        @dismiss="categoryStore.resetError" 
+      />
 
       <!-- Category Management -->
       <div v-else class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl border border-purple-100/50 overflow-hidden transition-all duration-300 mb-8">
@@ -65,19 +52,15 @@
               class="flex-1"
             />
             <div class="flex items-end">
-              <button 
+              <BaseButton 
                 type="submit" 
-                class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-lg shadow-md hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
-                :disabled="!newCategoryName.trim() || categoryStore.loading"
+                variant="primary"
+                :loading="isAddingCategory"
+                :disabled="!newCategoryName.trim()"
+                @click="addCategory"
               >
-                <div class="flex items-center justify-center">
-                  <svg v-if="categoryStore.loading" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <span>Add Category</span>
-                </div>
-              </button>
+                Add Category
+              </BaseButton>
             </div>
           </form>
         </div>
@@ -90,9 +73,15 @@
           </p>
           
           <TransitionGroup 
-            name="category-list" 
             tag="ul" 
             class="space-y-3"
+            enter-active-class="transition-all duration-500 ease-out"
+            leave-active-class="transition-all duration-500 ease-in"
+            enter-from-class="opacity-0 -translate-x-8"
+            enter-to-class="opacity-100 translate-x-0"
+            leave-from-class="opacity-100 translate-x-0"
+            leave-to-class="opacity-0 -translate-x-8"
+            move-class="transition-transform duration-500"
           >
             <li 
               v-for="category in categoryStore.sortedCategories" 
@@ -270,13 +259,17 @@ import { ref, onMounted, nextTick } from 'vue';
 import { useCategoryStore } from '../../stores/categoryStore';
 import NavBar from '../navbar/NavBar.vue';
 import BaseInput from '../ui/BaseInput.vue';
+import BaseButton from '../ui/BaseButton.vue';
 import PageHeader from '../ui/PageHeader.vue';
+import LoadingState from '../ui/LoadingState.vue';
+import ErrorState from '../ui/ErrorState.vue';
 
 // Initialize store
 const categoryStore = useCategoryStore();
 
 // State for adding new category
 const newCategoryName = ref('');
+const isAddingCategory = ref(false);
 
 // State for editing category
 const editingId = ref(null);
@@ -294,9 +287,22 @@ const draggedCategoryId = ref(null);
 const addCategory = async () => {
   if (!newCategoryName.value.trim()) return;
   
-  const result = await categoryStore.addCategory({ name: newCategoryName.value.trim() });
-  if (result.success) {
-    newCategoryName.value = '';
+  isAddingCategory.value = true;
+  
+  try {
+    const result = await categoryStore.addCategory({ name: newCategoryName.value.trim() });
+    
+    if (result.success) {
+      // Clear the input after successful addition
+      newCategoryName.value = '';
+      
+      // Force a small delay to ensure the animation is visible
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+  } catch (error) {
+    console.error('Error adding category:', error);
+  } finally {
+    isAddingCategory.value = false;
   }
 };
 
@@ -390,16 +396,5 @@ onMounted(async () => {
   background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
                     linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
   background-size: 20px 20px;
-}
-
-/* Transition animations for category list */
-.category-list-enter-active,
-.category-list-leave-active {
-  transition: all 0.3s ease;
-}
-.category-list-enter-from,
-.category-list-leave-to {
-  opacity: 0;
-  transform: translateX(-30px);
 }
 </style>
