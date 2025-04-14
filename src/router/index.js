@@ -7,6 +7,7 @@ import AuthCallback from '../components/auth/AuthCallback.vue';
 import TermsOfService from '../components/legal/TermsOfService.vue';
 import PrivacyPolicy from '../components/legal/PrivacyPolicy.vue';
 import NotFound from '../components/NotFound.vue';
+import CategoryManagement from '../components/category/CategoryManagement.vue';
 
 const routes = [
     {
@@ -19,6 +20,12 @@ const routes = [
         path: '/dashboard',
         name: 'dashboard',
         component: Dashboard,
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/manage-categories',
+        name: 'manage-categories',
+        component: CategoryManagement,
         meta: { requiresAuth: true }
     },
     {
