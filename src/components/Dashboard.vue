@@ -15,18 +15,20 @@
         subtitle="Keep track of your prayer requests and celebrations"
       >
         <template #actions>
-          <router-link to="/manage-categories" class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-medium bg-white/20 backdrop-blur-sm text-white shadow-inner hover:bg-white/30 transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
+          <ActionPill to="/manage-categories">
+            <template #icon>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </template>
             Manage Categories
-          </router-link>
+          </ActionPill>
         </template>
       </PageHeader>
       
       <!-- Loading State -->
-      <LoadingState v-if="prayerStore.loading" message="Loading prayers..." />
+      <LoadingState v-if="isInitialLoading" message="Loading prayers..." />
 
       <!-- Error State -->
       <ErrorState 
@@ -67,6 +69,7 @@
 </template>
 
 <script setup>
+// Imports
 import { ref, provide, onMounted, computed } from 'vue';
 import { usePrayerStore } from '../stores/prayerStore';
 import { useCategoryStore } from '../stores/categoryStore';
@@ -77,12 +80,14 @@ import BibleVerse from './ui/BibleVerse.vue';
 import PageHeader from './ui/PageHeader.vue';
 import LoadingState from './ui/LoadingState.vue';
 import ErrorState from './ui/ErrorState.vue';
+import ActionPill from './ui/ActionPill.vue';
 
-// Initialize stores
+// Store initialization
 const prayerStore = usePrayerStore();
 const categoryStore = useCategoryStore();
 
-// Modal state
+// State management
+const isInitialLoading = ref(true);
 const isModalVisible = ref(false);
 const isEditMode = ref(false);
 const currentPrayer = ref({
@@ -93,7 +98,18 @@ const currentPrayer = ref({
   resolved: false
 });
 
-// Open modal for adding a new prayer
+// Computed properties
+const currentDate = computed(() => {
+  const now = new Date();
+  return new Intl.DateTimeFormat('en-US', { 
+    weekday: 'long',
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  }).format(now);
+});
+
+// Prayer modal functions
 const openAddModal = (categoryId) => {
   isEditMode.value = false;
   currentPrayer.value = {
@@ -105,14 +121,12 @@ const openAddModal = (categoryId) => {
   isModalVisible.value = true;
 };
 
-// Open modal for editing an existing prayer
 const openEditModal = (prayer) => {
   isEditMode.value = true;
   currentPrayer.value = { ...prayer };
   isModalVisible.value = true;
 };
 
-// Save the current prayer
 const savePrayer = async (prayerData) => {
   if (isEditMode.value) {
     // Update existing prayer without showing loading state
@@ -126,13 +140,12 @@ const savePrayer = async (prayerData) => {
   isModalVisible.value = false;
 };
 
-// Toggle prayer resolved status
+// Prayer action functions
 const toggleResolved = async (prayer) => {
   // Don't await the promise to avoid loading state
   prayerStore.resolvePrayer(prayer.id, !prayer.resolved);
 };
 
-// Delete a prayer
 const deletePrayer = async (prayer) => {
   if (confirm('Are you sure you want to delete this prayer?')) {
     // Don't await to avoid loading state
@@ -140,35 +153,24 @@ const deletePrayer = async (prayer) => {
   }
 };
 
-// Provide modal functions to child components
+// Provide functions to child components
 provide('modalFunctions', {
   openAddModal,
   openEditModal
 });
 
-// Provide prayer action functions to child components
 provide('prayerActions', {
   toggleResolved,
   deletePrayer
 });
 
-// Format current date
-const currentDate = computed(() => {
-  const now = new Date();
-  return new Intl.DateTimeFormat('en-US', { 
-    weekday: 'long',
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  }).format(now);
-});
-
-// Fetch prayers and categories when component mounts
+// Lifecycle hooks
 onMounted(async () => {
   await Promise.all([
     prayerStore.fetchPrayers(),
     categoryStore.fetchCategories()
   ]);
+  isInitialLoading.value = false;
 });
 </script>
 

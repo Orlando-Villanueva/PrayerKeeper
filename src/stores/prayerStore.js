@@ -6,7 +6,8 @@ export const usePrayerStore = defineStore('prayer', {
     state: () => ({
         prayers: [],
         loading: false,
-        error: null
+        error: null,
+        hasFetched: false
     }),
 
     getters: {
@@ -32,6 +33,7 @@ export const usePrayerStore = defineStore('prayer', {
 
     actions: {
         async fetchPrayers() {
+            if (this.hasFetched) return;
             this.loading = true;
             this.error = null;
 
@@ -47,6 +49,8 @@ export const usePrayerStore = defineStore('prayer', {
 
                 if (error) throw error;
                 this.prayers = data || [];
+
+                this.hasFetched = true;
 
                 return { success: true, data };
 

@@ -15,15 +15,14 @@
         subtitle="Organize your prayers by creating and managing custom categories"
       >
         <template #actions>
-          <router-link 
-            to="/dashboard" 
-            class="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-white/20 backdrop-blur-sm text-white shadow-inner hover:bg-white/30 transition-all duration-300"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
+          <ActionPill to="/dashboard">
+            <template #icon>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </template>
             Back to Dashboard
-          </router-link>
+          </ActionPill>
         </template>
       </PageHeader>
       
@@ -255,6 +254,7 @@
 </template>
 
 <script setup>
+// Imports
 import { ref, onMounted, nextTick } from 'vue';
 import { useCategoryStore } from '../../stores/categoryStore';
 import NavBar from '../navbar/NavBar.vue';
@@ -263,33 +263,25 @@ import BaseButton from '../ui/BaseButton.vue';
 import PageHeader from '../ui/PageHeader.vue';
 import LoadingState from '../ui/LoadingState.vue';
 import ErrorState from '../ui/ErrorState.vue';
+import ActionPill from '../ui/ActionPill.vue';
 
-// Initialize store
+// Store initialization
 const categoryStore = useCategoryStore();
 
-// State for adding new category
+// State management
 const newCategoryName = ref('');
 const isAddingCategory = ref(false);
-
-// State for editing category
 const editingId = ref(null);
 const editingName = ref('');
 const editInput = ref(null);
-
-// State for delete confirmation
 const showDeleteModal = ref(false);
 const categoryToDelete = ref(null);
-
-// State for drag and drop
 const draggedCategoryId = ref(null);
-
-// State for initial loading
 const isInitialLoading = ref(true);
 
-// Add a new category
+// Category form functions
 const addCategory = async () => {
   if (!newCategoryName.value.trim()) return;
-  
   isAddingCategory.value = true;
   const result = await categoryStore.addCategory({ name: newCategoryName.value.trim() });
   isAddingCategory.value = false;
@@ -298,85 +290,54 @@ const addCategory = async () => {
   }
 };
 
-// Start editing a category
 const startEdit = (category) => {
   editingId.value = category.id;
   editingName.value = category.name;
-  
-  // Focus the input after the DOM updates
   nextTick(() => {
-    if (editInput.value) {
-      editInput.value.focus();
-    }
+    if (editInput.value) editInput.value.focus();
   });
 };
 
-// Cancel editing
+const updateCategory = async (id) => {
+  if (!editingName.value.trim()) return;
+  await categoryStore.updateCategory(id, { name: editingName.value.trim() });
+  editingId.value = null;
+  editingName.value = '';
+};
+
 const cancelEdit = () => {
   editingId.value = null;
   editingName.value = '';
 };
 
-// Update a category
-const updateCategory = async (id) => {
-  if (!editingName.value.trim()) return;
-  
-  const result = await categoryStore.updateCategory(id, { name: editingName.value.trim() });
-  if (result.success) {
-    cancelEdit();
-  }
-};
-
-// Toggle category visibility
-const toggleVisibility = async (id) => {
-  await categoryStore.toggleCategoryVisibility(id);
-};
-
-// Confirm delete
+// Delete modal functions
 const confirmDelete = (category) => {
   categoryToDelete.value = category;
   showDeleteModal.value = true;
 };
 
-// Delete a category
 const deleteCategory = async () => {
   if (!categoryToDelete.value) return;
-  
-  const result = await categoryStore.deleteCategory(categoryToDelete.value.id);
-  if (result.success) {
-    showDeleteModal.value = false;
-    categoryToDelete.value = null;
-  }
+  await categoryStore.deleteCategory(categoryToDelete.value.id);
+  showDeleteModal.value = false;
+  categoryToDelete.value = null;
 };
 
-// Drag and drop functionality
+// Visibility toggle
+const toggleVisibility = async (category) => {
+  await categoryStore.toggleCategoryVisibility(category.id, !category.is_visible);
+};
+
+// Drag and drop (simplified)
 const startDrag = (id) => {
   draggedCategoryId.value = id;
-  document.addEventListener('mousemove', onDrag);
-  document.addEventListener('mouseup', endDrag);
 };
 
-const onDrag = (e) => {
-  // This would be implemented with a proper drag and drop library
-  // For now, we're just capturing the events
-};
-
-const endDrag = () => {
-  document.removeEventListener('mousemove', onDrag);
-  document.removeEventListener('mouseup', endDrag);
-  draggedCategoryId.value = null;
-  
-  // In a real implementation, we would reorder the categories here
-  // based on the drop position
-};
-
-// Implement actual drag and drop reordering
-// This is a simplified version - in a real app, you would use a library like vue-draggable
 const reorderCategories = async (newOrder) => {
   await categoryStore.reorderCategories(newOrder);
 };
 
-// Fetch categories when component mounts
+// Lifecycle hooks
 onMounted(async () => {
   if (!categoryStore.hasFetched) {
     isInitialLoading.value = true;
