@@ -10,18 +10,20 @@
     <!-- Main Content -->
     <main class="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12">
       <!-- Dashboard Header -->
-      <div class="text-center mb-6 sm:mb-12">
-        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white drop-shadow-lg">Prayer Dashboard</h1>
-        <p class="mt-2 sm:mt-3 text-base sm:text-lg tracking-wide text-white/90 drop-shadow font-medium">Keep track of your prayer requests and celebrations</p>
-        <div class="mt-4 sm:mt-6 flex justify-center space-x-4">
-          <span class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-medium bg-white/20 backdrop-blur-sm text-white shadow-inner">
+      <PageHeader 
+        title="Prayer Dashboard" 
+        subtitle="Keep track of your prayer requests and celebrations"
+      >
+        <template #actions>
+          <router-link to="/manage-categories" class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-medium bg-white/20 backdrop-blur-sm text-white shadow-inner hover:bg-white/30 transition-all duration-300">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            {{ currentDate }}
-          </span>
-        </div>
-      </div>
+            Manage Categories
+          </router-link>
+        </template>
+      </PageHeader>
       
       <!-- Loading State -->
       <div v-if="prayerStore.loading" class="flex flex-col justify-center items-center py-16">
@@ -85,6 +87,7 @@ import NavBar from './navbar/NavBar.vue';
 import PrayerList from './prayer/PrayerList.vue';
 import PrayerModal from './prayer/PrayerModal.vue';
 import BibleVerse from './ui/BibleVerse.vue';
+import PageHeader from './ui/PageHeader.vue';
 
 // Initialize stores
 const prayerStore = usePrayerStore();
