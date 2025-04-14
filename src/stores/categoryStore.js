@@ -6,7 +6,8 @@ export const useCategoryStore = defineStore('category', {
     state: () => ({
         categories: [],
         loading: false,
-        error: null
+        error: null,
+        hasFetched: false
     }),
 
     getters: {
@@ -34,6 +35,7 @@ export const useCategoryStore = defineStore('category', {
          * @returns {Promise<Object>} Object with success status and data or error message.
          */
         async fetchCategories() {
+            if (this.hasFetched) return;
             this.loading = true;
             this.error = null;
 
@@ -50,6 +52,7 @@ export const useCategoryStore = defineStore('category', {
                 if (error) throw error;
                 this.categories = data || [];
 
+                this.hasFetched = true;
                 return { success: true, data };
             } catch (error) {
                 this.error = error.message || 'Failed to fetch categories';
