@@ -63,7 +63,17 @@
           </BaseButton>
         </div>
       </div>
-      <ul v-else class="divide-y divide-purple-100 -mx-1">
+      <TransitionGroup
+        tag="ul"
+        class="divide-y divide-purple-100 -mx-1"
+        enter-active-class="transition-all duration-500 ease-out"
+        leave-active-class="transition-all duration-500 ease-in"
+        enter-from-class="opacity-0 -translate-x-8 scale-95"
+        enter-to-class="opacity-100 translate-x-0 scale-100"
+        leave-from-class="opacity-100 translate-x-0 scale-100"
+        leave-to-class="opacity-0 -translate-x-8 scale-95"
+        move-class="transition-transform duration-500"
+      >
         <li v-for="prayer in prayers" :key="prayer.id" class="py-1.5 group hover:bg-purple-50/50 rounded-lg px-1 mx-1 my-0.5">
           <div class="flex flex-wrap sm:flex-nowrap items-start sm:items-center justify-between gap-2">
             <div class="flex-1 min-w-0 mb-1 sm:mb-0">
@@ -111,7 +121,7 @@
             </div>
           </div>
         </li>
-      </ul>
+      </TransitionGroup>
     </div>
   </div>
 </template>
