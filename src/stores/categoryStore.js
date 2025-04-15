@@ -205,11 +205,18 @@ export const useCategoryStore = defineStore('category', {
                 if (!authStore.isAuthenticated) throw new Error('User not authenticated');
 
                 // Create updates array with new order values
-                const updates = newOrder.map((id, index) => ({
-                    id,
-                    order: index + 1,
-                    updated_at: new Date().toISOString()
-                }));
+                const updates = newOrder.map((id, index) => {
+                    // Find the existing category to preserve all its fields
+                    const category = this.categories.find(c => c.id === id);
+                    if (!category) return null;
+                    
+                    // Return all fields along with the updated order
+                    return {
+                        ...category,
+                        order: index + 1,
+                        updated_at: new Date().toISOString()
+                    };
+                }).filter(Boolean); // Remove any null entries
 
                 // Update all categories in a single transaction
                 const { error } = await supabase
