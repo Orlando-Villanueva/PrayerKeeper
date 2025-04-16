@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { supabase } from '../db/supabase';
 import { useAuthStore } from './authStore';
+import { usePrayerStore } from './prayerStore';
 
 export const useCategoryStore = defineStore('category', {
     state: () => ({
@@ -165,8 +166,22 @@ export const useCategoryStore = defineStore('category', {
 
                 const authStore = useAuthStore();
                 if (!authStore.isAuthenticated) throw new Error('User not authenticated');
+                
+                // Import the prayer store to check if category has prayers
+                const prayerStore = usePrayerStore();
+                
+                // Ensure prayers are loaded
+                if (!prayerStore.hasFetched) {
+                    await prayerStore.fetchPrayers();
+                }
+                
+                // Check if category has any prayers
+                const prayersInCategory = prayerStore.prayersByCategory(id, true);
+                if (prayersInCategory.length > 0) {
+                    throw new Error(`Cannot delete category with existing prayers. Please delete or move all prayers from this category first.`);
+                }
 
-                // Optimistically update UI
+                // Only update UI after confirming category has no prayers
                 const deletedCategory = this.categories.find(c => c.id === id);
                 this.categories = this.categories.filter(category => category.id !== id);
 
