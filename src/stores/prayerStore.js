@@ -176,6 +176,17 @@ export const usePrayerStore = defineStore('prayer', {
 
         resetError() {
             this.error = null;
+        },
+        
+        /**
+         * Resets the store to its initial state.
+         * Called when user logs out to clear previous user's data.
+         */
+        resetStore() {
+            this.prayers = [];
+            this.loading = false;
+            this.error = null;
+            this.hasFetched = false;
         }
     }
 });

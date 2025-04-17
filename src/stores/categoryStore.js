@@ -276,6 +276,17 @@ export const useCategoryStore = defineStore('category', {
 
         resetError() {
             this.error = null;
+        },
+        
+        /**
+         * Resets the store to its initial state.
+         * Called when user logs out to clear previous user's data.
+         */
+        resetStore() {
+            this.categories = [];
+            this.loading = false;
+            this.error = null;
+            this.hasFetched = false;
         }
     }
 });
