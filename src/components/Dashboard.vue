@@ -70,7 +70,7 @@
 
 <script setup>
 // Imports
-import { ref, provide, onMounted, computed } from 'vue';
+import { ref, provide, onMounted } from 'vue';
 import { usePrayerStore } from '../stores/prayerStore';
 import { useCategoryStore } from '../stores/categoryStore';
 import NavBar from './navbar/NavBar.vue';
@@ -96,17 +96,6 @@ const currentPrayer = ref({
   note: '',
   category_id: null,
   resolved: false
-});
-
-// Computed properties
-const currentDate = computed(() => {
-  const now = new Date();
-  return new Intl.DateTimeFormat('en-US', { 
-    weekday: 'long',
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  }).format(now);
 });
 
 // Prayer modal functions

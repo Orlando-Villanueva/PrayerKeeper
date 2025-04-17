@@ -40,7 +40,6 @@
       <BaseButton 
         type="submit"
         form="categoryForm"
-        :disabled="!categoryName.trim()"
         :loading="isSubmitting"
         class="w-full sm:w-auto py-2.5"
       >
@@ -83,9 +82,17 @@ function closeModal() {
   emit('update:modelValue', false);
 }
 
+// Form validation
+const isFormValid = computed(() => {
+  return categoryName.value.trim().length > 0;
+});
+
 async function saveCategory() {
-  if (!categoryName.value.trim()) return;
-  
+  if (!isFormValid.value) {
+    alert('Please enter a category name');
+    return;
+  }
+
   try {
     isSubmitting.value = true;
     
