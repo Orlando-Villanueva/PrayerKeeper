@@ -152,19 +152,29 @@
                 
                 <!-- Category Name (View/Edit Mode) -->
                 <div class="flex-1 flex items-center min-h-[48px]">
-                  <!-- View Mode -->
-                  <span v-if="!editingId || editingId !== category.id" class="font-medium text-gray-800 text-base ml-3">{{ category.name }}</span>
-                  
-                  <!-- Edit Mode -->
-                  <div v-else class="w-full ml-3">
-                    <input 
-                      type="text" 
-                      v-model="editingName" 
-                      class="w-full border-purple-300 rounded-md shadow-sm focus:border-purple-400 focus:ring focus:ring-purple-200 focus:ring-opacity-50 py-2 px-3 bg-purple-50/70" 
-                      @keyup.enter="updateCategory(category.id)"
-                      @keyup.esc="cancelEdit"
-                      ref="editInput"
-                    />
+                  <!-- Category Name with Prayer Count -->
+                  <div class="flex-grow ml-3 md:ml-4 flex items-center gap-3">
+                    <!-- View Mode -->
+                    <template v-if="!editingId || editingId !== category.id">
+                      <span class="text-gray-900 font-medium">{{ category.name }}</span>
+                      <span class="text-xs px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full font-medium flex items-center">
+                        {{ prayerStore.prayersByCategory(category.id, true).length }}
+                        <span class="hidden sm:inline ml-1">
+                          {{ prayerStore.prayersByCategory(category.id, true).length === 1 ? 'prayer' : 'prayers' }}
+                        </span>
+                      </span>
+                    </template>
+                    <!-- Edit Mode -->
+                    <div v-else class="w-full">
+                      <input 
+                        type="text" 
+                        v-model="editingName" 
+                        class="w-full border-purple-300 rounded-md shadow-sm focus:border-purple-400 focus:ring focus:ring-purple-200 focus:ring-opacity-50 py-2 px-3 bg-purple-50/70" 
+                        @keyup.enter="updateCategory(category.id)"
+                        @keyup.esc="cancelEdit"
+                        ref="editInput"
+                      />
+                    </div>
                   </div>
                 </div>
                 
@@ -276,8 +286,9 @@
 
 <script setup>
 // Imports
-import { ref, reactive, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useCategoryStore } from '../../stores/categoryStore';
+import { usePrayerStore } from '../../stores/prayerStore';
 import NavBar from '../navbar/NavBar.vue';
 import PageHeader from '../ui/PageHeader.vue';
 import LoadingState from '../ui/LoadingState.vue';
@@ -289,15 +300,17 @@ import CategoryModal from './CategoryModal.vue';
 
 // Store initialization
 const categoryStore = useCategoryStore();
+const prayerStore = usePrayerStore();
 
 // State management
 const editingId = ref(null);
-const editingName = ref('');
+const editingName = ref("");
 const editInput = ref(null);
 const showAddModal = ref(false);
-const draggedCategoryId = ref(null);
-const isInitialLoading = ref(true);
+const isInitialLoading = ref(false);
+const isPrayersLoading = ref(false);
 const isReorderMode = ref(false);
+const draggedCategoryId = ref(null);
 
 // Category modal functions
 const openAddModal = () => {
@@ -434,11 +447,30 @@ const reorderCategories = async (newOrder) => {
 
 // Add dragend event to document to handle case when dragging ends outside of a valid drop target
 onMounted(async () => {
-  if (!categoryStore.hasFetched) {
-    isInitialLoading.value = true;
-    await categoryStore.fetchCategories();
-  }
-  isInitialLoading.value = false;
+  // Create a function to load all required data
+  const loadData = async () => {
+    const loadingTasks = [];
+    
+    // Load categories if needed
+    if (!categoryStore.hasFetched) {
+      isInitialLoading.value = true;
+      loadingTasks.push(categoryStore.fetchCategories());
+    }
+    
+    // Load prayers if needed
+    if (!prayerStore.hasFetched) {
+      isPrayersLoading.value = true;
+      loadingTasks.push(prayerStore.fetchPrayers());
+    }
+    
+    // Wait for all data to load
+    await Promise.all(loadingTasks);
+    
+    isInitialLoading.value = false;
+    isPrayersLoading.value = false;
+  };
+  
+  await loadData();
   
   // Add global dragend event listener
   document.addEventListener('dragend', () => {
