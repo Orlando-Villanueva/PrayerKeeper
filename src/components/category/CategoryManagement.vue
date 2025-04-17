@@ -39,18 +39,18 @@
       />
 
       <!-- Category Management -->
-      <div v-else class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl border border-purple-100/50 overflow-hidden transition-all duration-300 mb-6 sm:mb-10">
+      <div v-else class="bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-sm rounded-xl shadow-xl border border-purple-100/50 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:translate-y-[-1px] hover:border-purple-200 mb-6 sm:mb-10">
 
-        <!-- Category List -->
-        <div class="px-3 md:px-4 py-3">
+        <!-- Category List Header -->
+        <div class="px-3 md:px-4 py-3 bg-gradient-to-r from-purple-300 to-purple-200 border-b border-purple-300/70">
           <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 sm:mb-6 gap-3">
-            <h2 class="text-xl font-medium text-purple-900 tracking-tight">Your Categories</h2>
+            <h2 class="text-xl font-bold tracking-tight text-gray-900">Your Categories</h2>
             <div class="flex gap-3">
               <BaseButton
                 v-if="categoryStore.categories.length > 1"
                 variant="secondary"
                 size="small"
-                class="flex-1 sm:flex-auto text-sm flex items-center justify-center px-4 py-2 border border-purple-200 shadow-sm sm:hidden"
+                class="flex-1 sm:flex-auto text-sm flex items-center justify-center px-4 py-2 border border-purple-200 shadow-sm active:bg-purple-50 active:scale-[0.98] transition-all duration-150 sm:hidden"
                 @click="toggleReorderMode"
               >
                 <template v-if="!isReorderMode">
@@ -66,7 +66,7 @@
               <BaseButton
                 variant="primary"
                 size="small"
-                class="flex-1 sm:flex-auto text-sm flex items-center justify-center px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white"
+                class="flex-1 sm:flex-auto text-sm flex items-center justify-center px-4 py-2 bg-purple-500 hover:bg-purple-600 active:bg-purple-700 active:scale-[0.98] text-white transition-all duration-150"
                 @click="openAddModal"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -76,10 +76,11 @@
               </BaseButton>
             </div>
           </div>
-          <p v-if="!categoryStore.categories.length" class="text-gray-500 italic mb-4">
+          <p v-if="!categoryStore.categories.length" class="text-gray-600 italic mb-4">
             You don't have any categories yet. Add your first category above.
           </p>
           
+          <div class="px-3 md:px-4 py-2 sm:px-4 flex-1 overflow-y-auto">
           <TransitionGroup 
             tag="ul" 
             class="space-y-3 px-0.5"
@@ -94,21 +95,21 @@
             <li 
               v-for="category in categoryStore.sortedCategories" 
               :key="category.id"
-              class="bg-white rounded-lg border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 group overflow-hidden"
+              class="py-1.5 px-1.5 rounded-lg border border-purple-100/60 bg-white/90 shadow-sm hover:shadow-md transition-all duration-300 group overflow-hidden"
               :class="{ 
                 'opacity-60': !category.is_visible,
-                'border-purple-200 bg-white/95': isReorderMode,
+                'border-purple-200 bg-white/95 hover:bg-purple-50/30': isReorderMode,
                 'border-purple-300 bg-purple-50/30 shadow-md': editingId === category.id
               }"
               @dragover.prevent
               @dragenter.prevent="handleDragEnter($event, category.id)"
               @drop="handleDrop($event, category.id)"
             >
-              <div class="p-4 sm:p-5 flex items-center justify-between">
+              <div class="p-3 sm:p-4 flex items-center justify-between">
 
                 <!-- Drag Handle (Desktop) -->
                 <div 
-                  class="hidden sm:flex cursor-grab text-gray-400 hover:text-gray-600 mr-4 p-1.5 rounded-md hover:bg-gray-100 transition-colors duration-150" 
+                  class="hidden sm:flex cursor-grab text-gray-400 hover:text-gray-600 active:text-purple-600 mr-4 p-1.5 rounded-md hover:bg-gray-100 active:bg-purple-50 transition-all duration-150" 
                   draggable="true"
                   @dragstart="startDrag($event, category.id)"
                   @dragover.prevent
@@ -122,11 +123,11 @@
                 
                 <!-- Reorder Controls (Left Side) -->
                 <div v-if="isReorderMode" class="flex items-center mr-3 sm:hidden">
-                  <div class="flex flex-col space-y-1">
+                  <div class="flex flex-col space-y-1.5">
                     <!-- Up Arrow Button -->
                     <button 
                       @click="moveCategory(category.id, 'up')"
-                      class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-purple-600 transition-colors duration-200 bg-gray-100 hover:bg-purple-50 active:scale-95 rounded-full"
+                      class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-purple-600 active:text-purple-700 transition-all duration-200 bg-gray-100 hover:bg-purple-50 active:bg-purple-100 active:scale-95 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1"
                       :disabled="getCategoryIndex(category.id) === 0"
                       :class="{ 'opacity-40 pointer-events-none': getCategoryIndex(category.id) === 0 }"
                     >
@@ -138,7 +139,7 @@
                     <!-- Down Arrow Button -->
                     <button 
                       @click="moveCategory(category.id, 'down')"
-                      class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-purple-600 transition-colors duration-200 bg-gray-100 hover:bg-purple-50 active:scale-95 rounded-full"
+                      class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-purple-600 active:text-purple-700 transition-all duration-200 bg-gray-100 hover:bg-purple-50 active:bg-purple-100 active:scale-95 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1"
                       :disabled="getCategoryIndex(category.id) === categoryStore.sortedCategories.length - 1"
                       :class="{ 'opacity-40 pointer-events-none': getCategoryIndex(category.id) === categoryStore.sortedCategories.length - 1 }"
                     >
@@ -168,11 +169,11 @@
                 </div>
                 
                 <!-- Actions -->
-                <div class="flex items-center space-x-1.5 sm:space-x-3">
+                <div class="flex items-center space-x-2 opacity-70 group-hover:opacity-100 transition-opacity duration-200">
                   <!-- Toggle Visibility Button -->
-                  <button 
+                  <BaseActionButton 
                     @click="toggleVisibility(category.id)"
-                    class="text-gray-500 hover:text-purple-600 transition-colors duration-200 p-2 rounded-full hover:bg-purple-50 active:bg-purple-100 active:scale-95"
+                    variant="default"
                     :title="category.is_visible ? 'Hide category' : 'Show category'"
                   >
                     <svg v-if="category.is_visible" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -182,44 +183,46 @@
                     <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                     </svg>
-                  </button>
+                  </BaseActionButton>
                   
                   <!-- Edit/Save Button -->
-                  <button 
+                  <BaseActionButton 
                     v-if="!editingId || editingId !== category.id"
                     @click="startEdit(category)"
-                    class="text-gray-500 hover:text-purple-600 transition-colors duration-200 p-2 rounded-full hover:bg-purple-50 active:bg-purple-100 active:scale-95"
+                    variant="primary"
                     title="Edit category"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
-                  </button>
-                  <button 
+                  </BaseActionButton>
+                  <BaseActionButton 
                     v-else
                     @click="updateCategory(category.id)"
-                    class="text-green-500 hover:text-green-600 transition-colors duration-200 p-1 rounded-full hover:bg-green-50 bg-white shadow-sm"
+                    variant="success"
                     title="Save changes"
+                    class="bg-white shadow-sm"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
-                  </button>
+                  </BaseActionButton>
                   
                   <!-- Delete Button -->
-                  <button 
+                  <BaseActionButton 
                     @click="deleteCategory(category)"
-                    class="p-1.5 rounded-full text-gray-500 hover:text-red-600 focus:text-red-600 hover:bg-red-50 focus:bg-red-50 transition-colors duration-200"
+                    variant="danger"
                     title="Delete category"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                  </button>
+                  </BaseActionButton>
                 </div>
               </div>
             </li>
           </TransitionGroup>
+          </div>
         </div>
       </div>
 
@@ -273,13 +276,14 @@
 
 <script setup>
 // Imports
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
 import { useCategoryStore } from '../../stores/categoryStore';
 import NavBar from '../navbar/NavBar.vue';
-import BaseButton from '../ui/BaseButton.vue';
 import PageHeader from '../ui/PageHeader.vue';
 import LoadingState from '../ui/LoadingState.vue';
 import ErrorState from '../ui/ErrorState.vue';
+import BaseButton from '../ui/BaseButton.vue';
+import BaseActionButton from '../ui/BaseActionButton.vue';
 import ActionPill from '../ui/ActionPill.vue';
 import CategoryModal from './CategoryModal.vue';
 
