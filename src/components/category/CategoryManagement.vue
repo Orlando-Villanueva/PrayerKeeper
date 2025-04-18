@@ -47,7 +47,6 @@
                 variant="secondary" 
                 size="small"
                 class="text-sm flex items-center justify-center px-4 py-2 border border-purple-200 shadow-sm active:bg-purple-50 active:scale-[0.98] transition-all duration-150 sm:hidden flex-1"
-                :class="{ 'w-full': isReorderMode }"
                 @click="toggleReorderMode">
                 <template v-if="!isReorderMode">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
@@ -65,7 +64,6 @@
                 variant="primary" 
                 size="small"
                 class="text-sm flex items-center justify-center px-4 py-2 bg-purple-500 hover:bg-purple-600 active:bg-purple-700 active:scale-[0.98] text-white transition-all duration-150 flex-1 sm:flex-auto"
-                :class="{ 'hidden sm:flex': isReorderMode, 'flex': !isReorderMode }"
                 @click="openAddModal">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
