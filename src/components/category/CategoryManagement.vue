@@ -30,7 +30,8 @@
       <LoadingState v-if="isInitialLoading" message="Loading categories..." />
 
       <!-- Error State -->
-      <ErrorState v-else-if="categoryStore.error" :message="categoryStore.error" @dismiss="categoryStore.resetError" />
+      <ErrorState v-if="categoryStore.error" :message="categoryStore.error" @dismiss="categoryStore.resetError" />
+<ErrorState v-if="deleteError" :message="deleteError" @dismiss="deleteError = null" />
 
       <!-- Category Management -->
       <div v-else
@@ -40,9 +41,13 @@
         <div class="px-3 md:px-4 py-3 bg-gradient-to-r from-purple-300 to-purple-200 border-b border-purple-300/70">
           <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-2 sm:mb-0 gap-3">
             <h2 class="text-xl font-bold tracking-tight text-gray-900 sm:mt-1">Your Categories</h2>
-            <div class="flex gap-3">
-              <BaseButton v-if="categoryStore.categories.length > 1" variant="secondary" size="small"
-                class="flex-1 sm:flex-auto text-sm flex items-center justify-center px-4 py-2 border border-purple-200 shadow-sm active:bg-purple-50 active:scale-[0.98] transition-all duration-150 sm:hidden"
+            <div class="flex gap-3" :class="{ 'w-full sm:w-auto': isReorderMode }">
+              <BaseButton 
+                v-if="categoryStore.categories.length > 1" 
+                variant="secondary" 
+                size="small"
+                class="text-sm flex items-center justify-center px-4 py-2 border border-purple-200 shadow-sm active:bg-purple-50 active:scale-[0.98] transition-all duration-150 sm:hidden flex-1"
+                :class="{ 'w-full': isReorderMode }"
                 @click="toggleReorderMode">
                 <template v-if="!isReorderMode">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
@@ -56,8 +61,11 @@
                   Done
                 </template>
               </BaseButton>
-              <BaseButton variant="primary" size="small"
-                class="flex-1 sm:flex-auto text-sm flex items-center justify-center px-4 py-2 bg-purple-500 hover:bg-purple-600 active:bg-purple-700 active:scale-[0.98] text-white transition-all duration-150"
+              <BaseButton 
+                variant="primary" 
+                size="small"
+                class="text-sm flex items-center justify-center px-4 py-2 bg-purple-500 hover:bg-purple-600 active:bg-purple-700 active:scale-[0.98] text-white transition-all duration-150 flex-1 sm:flex-auto"
+                :class="{ 'hidden sm:flex': isReorderMode, 'flex': !isReorderMode }"
                 @click="openAddModal">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
@@ -79,135 +87,25 @@
               enter-to-class="opacity-100 translate-x-0 scale-100"
               leave-from-class="opacity-100 translate-x-0 scale-100" leave-to-class="opacity-0 -translate-x-8 scale-95"
               move-class="transition-transform duration-500">
-              <li v-for="category in categoryStore.sortedCategories" :key="category.id"
-                class="py-1.5 px-1.5 rounded-lg border border-purple-100/60 bg-white/90 shadow-sm hover:shadow-md transition-all duration-300 group overflow-hidden h-full flex flex-col"
-                :class="{
-                  'opacity-60': !category.is_visible,
-                  'border-purple-200 bg-white/95 hover:bg-purple-50/30': isReorderMode,
-                  'border-purple-300 bg-purple-50/30 shadow-md': editingId === category.id
-                }" @dragover.prevent @dragenter.prevent="handleDragEnter($event, category.id)"
-                @drop="handleDrop($event, category.id)">
-                <div class="p-3 sm:p-4 flex items-center justify-between flex-1" :class="{ 'bg-purple-50/30': editingId === category.id }">
-
-                  <!-- Drag Handle (Desktop) -->
-                  <div
-                    class="hidden sm:flex cursor-grab text-gray-400 hover:text-gray-600 active:text-purple-600 mr-4 p-1.5 rounded-md hover:bg-gray-100 active:bg-purple-50 transition-all duration-150"
-                    draggable="true" @dragstart="startDrag($event, category.id)" @dragover.prevent @dragenter.prevent
-                    title="Drag to reorder">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                      stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
-                    </svg>
-                  </div>
-
-                  <!-- Reorder Controls (Left Side) -->
-                  <div v-if="isReorderMode" class="flex items-center mr-3 sm:hidden">
-                    <div class="flex flex-col space-y-1.5">
-                      <!-- Up Arrow Button -->
-                      <button @click="moveCategory(category.id, 'up')"
-                        class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-purple-600 active:text-purple-700 transition-all duration-200 bg-gray-100 hover:bg-purple-50 active:bg-purple-100 active:scale-95 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1"
-                        :disabled="getCategoryIndex(category.id) === 0"
-                        :class="{ 'opacity-40 pointer-events-none': getCategoryIndex(category.id) === 0 }">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                          stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-                        </svg>
-                      </button>
-
-                      <!-- Down Arrow Button -->
-                      <button @click="moveCategory(category.id, 'down')"
-                        class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-purple-600 active:text-purple-700 transition-all duration-200 bg-gray-100 hover:bg-purple-50 active:bg-purple-100 active:scale-95 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1"
-                        :disabled="getCategoryIndex(category.id) === categoryStore.sortedCategories.length - 1"
-                        :class="{ 'opacity-40 pointer-events-none': getCategoryIndex(category.id) === categoryStore.sortedCategories.length - 1 }">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                          stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Category Name (View/Edit Mode) -->
-                  <div class="flex-1 flex items-center min-h-[48px]">
-                    <!-- Category Name with Prayer Count -->
-                    <div class="flex-grow ml-3 md:ml-4 flex items-center gap-3" :class="{ 'pr-3 md:pr-4': editingId === category.id }">
-                      <!-- View Mode -->
-                      <template v-if="!editingId || editingId !== category.id">
-                        <span class="text-gray-900 font-medium">{{ category.name }}</span>
-                        <span
-                          class="text-xs px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full font-medium flex items-center">
-                          {{ prayerStore.prayersByCategory(category.id, true).length }}
-                          <span class="hidden sm:inline ml-1">
-                            {{ prayerStore.prayersByCategory(category.id, true).length === 1 ? 'prayer' : 'prayers' }}
-                          </span>
-                        </span>
-                      </template>
-                      <!-- Edit Mode -->
-                      <div v-else class="w-full">
-                        <input type="text" v-model="editingName"
-                          class="w-full border-2 border-purple-400 rounded-md shadow-md focus:border-purple-400 focus:ring-0 py-2 px-3 bg-purple-50/90 text-purple-900 font-medium"
-                          @keyup.enter="updateCategory(category.id)" @keyup.esc="cancelEdit" ref="editInput" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Actions -->
-                  <div
-                    class="flex items-center space-x-3 mr-3 md:mr-4 opacity-80 group-hover:opacity-100 transition-opacity duration-200"  :class="{ 'ml-2': editingId === category.id }">
-                    <!-- Toggle Visibility Button (hidden in edit mode) -->
-                    <BaseActionButton v-if="!editingId || editingId !== category.id" @click="toggleVisibility(category.id)" variant="default"
-                      :title="category.is_visible ? 'Hide category' : 'Show category'">
-                      <svg v-if="category.is_visible" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                      <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                      </svg>
-                    </BaseActionButton>
-
-                    <!-- Edit/Save Button -->
-                    <BaseActionButton v-if="!editingId || editingId !== category.id" @click="startEdit(category)"
-                      variant="primary" title="Edit category">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                      </svg>
-                    </BaseActionButton>
-                    <BaseActionButton v-else @click="updateCategory(category.id)" variant="success" title="Save changes"
-                      class="bg-white shadow-sm border border-green-200 hover:bg-green-50 scale-110 transition-all duration-200">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                      </svg>
-                    </BaseActionButton>
-
-                    <!-- Cancel Button (only in edit mode) -->
-                    <BaseActionButton v-if="editingId === category.id" @click="cancelEdit" variant="default" title="Cancel editing"
-                      class="bg-white shadow-sm border border-purple-200 hover:bg-purple-50 scale-110 transition-all duration-200">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </BaseActionButton>
-
-                    <!-- Delete Button (hidden in edit mode) -->
-                    <BaseActionButton v-if="!editingId || editingId !== category.id" @click="deleteCategory(category)" variant="danger" title="Delete category">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </BaseActionButton>
-                  </div>
-                </div>
-              </li>
+              <CategoryItem 
+                v-for="category in categoryStore.sortedCategories" 
+                :key="category.id"
+                :category="category"
+                :editing-id="editingId"
+                :is-reorder-mode="isReorderMode"
+                :category-index="getCategoryIndex(category.id)"
+                :total-categories="categoryStore.sortedCategories.length"
+                @update="updateCategory"
+                @toggle-visibility="toggleVisibility"
+                @delete="deleteCategory"
+                @drag-start="startDrag"
+                @drag-enter="handleDragEnter"
+                @drop="handleDrop"
+                @edit="startEdit"
+                @cancel-edit="cancelEdit"
+                @move="moveCategory"
+                @delete-error="showDeleteError"
+              />
             </TransitionGroup>
           </div>
         </div>
@@ -287,6 +185,7 @@ import BaseButton from '../ui/BaseButton.vue';
 import BaseActionButton from '../ui/BaseActionButton.vue';
 import ActionPill from '../ui/ActionPill.vue';
 import CategoryModal from './CategoryModal.vue';
+import CategoryItem from './CategoryItem.vue';
 
 // Store initialization
 const categoryStore = useCategoryStore();
@@ -301,6 +200,7 @@ const isInitialLoading = ref(false);
 const isPrayersLoading = ref(false);
 const isReorderMode = ref(false);
 const draggedCategoryId = ref(null);
+const deleteError = ref(null);
 
 // Category modal functions
 const openAddModal = () => {
@@ -318,21 +218,15 @@ const addCategory = async (categoryName) => {
 };
 
 const startEdit = (category) => {
+  // Store currently edited category id
   editingId.value = category.id;
-  editingName.value = category.name;
-  
-  nextTick(() => {
-    if (editInput.value) {
-      editInput.value.focus();
-    }
-  });
+  // The actual editing name is managed by the CategoryItem component
 };
 
-const updateCategory = async (id) => {
-  if (!editingName.value.trim()) return;
-  await categoryStore.updateCategory(id, { name: editingName.value.trim() });
+const updateCategory = async (id, newName) => {
+  if (!newName || newName.trim() === '') return;
+  await categoryStore.updateCategory(id, { name: newName.trim() });
   editingId.value = null;
-  editingName.value = '';
 };
 
 const cancelEdit = () => {
@@ -436,6 +330,10 @@ const handleDrop = async (event, targetId) => {
 
 const reorderCategories = async (newOrder) => {
   await categoryStore.reorderCategories(newOrder);
+};
+
+const showDeleteError = (msg) => {
+  deleteError.value = msg;
 };
 
 // Add dragend event to document to handle case when dragging ends outside of a valid drop target
