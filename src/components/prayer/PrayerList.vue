@@ -67,22 +67,24 @@
           class="py-2 sm:py-4 group hover:bg-purple-50/50 rounded-lg px-2">
           <div class="flex flex-wrap sm:flex-nowrap items-start sm:items-center justify-between gap-2">
             <div class="flex-1 min-w-0 mb-1 sm:mb-0">
-              <p class="text-base font-semibold text-gray-900 tracking-wide"
-                :class="{ 'line-through text-gray-500': prayer.resolved }">
-                {{ prayer.person_name }}
-              </p>
+              <div class="flex items-center gap-2 flex-wrap">
+                <p class="text-base font-semibold text-gray-900 tracking-wide mb-0"
+                  :class="{ 'line-through text-gray-500': prayer.resolved }">
+                  {{ prayer.person_name }}
+                </p>
+                <span v-if="prayer.resolved"
+                  class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Resolved
+                </span>
+              </div>
               <p v-if="prayer.note" class="mt-1 text-sm text-gray-600 leading-relaxed"
                 :class="{ 'line-through text-gray-400': prayer.resolved }">
                 {{ prayer.note }}
               </p>
-              <span v-if="prayer.resolved"
-                class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-1.5 shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Resolved
-              </span>
             </div>
             <div class="flex space-x-2 opacity-70 group-hover:opacity-100 transition-opacity duration-200 ml-1">
               <BaseActionButton @click="prayerActions.toggleResolved(prayer)" variant="success"
