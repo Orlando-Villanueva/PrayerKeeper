@@ -13,7 +13,7 @@
       <PageHeader title="Manage Categories" subtitle="Organize your prayers with custom categories">
         <template #actions>
           <div class="flex gap-3">
-            <ActionPill to="/dashboard" class="min-w-[180px] justify-center">
+            <ActionPill to="/dashboard" class="min-w-[180px] justify-center" ref="dashboardPillRef">
               <template #icon>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
@@ -174,7 +174,7 @@
 
 <script setup>
 // Imports
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useCategoryStore } from '../../stores/categoryStore';
 import { usePrayerStore } from '../../stores/prayerStore';
 import NavBar from '../navbar/NavBar.vue';
@@ -207,20 +207,41 @@ const openAddModal = () => {
   showAddModal.value = true;
 };
 
-const addCategory = async (categoryName) => {
-  if (!categoryName.trim()) return;
+const dashboardPillRef = ref(null);
 
-  await categoryStore.addCategory({
-    name: categoryName.trim(),
-    is_visible: true
-  });
-  return true;
+// Stop shine if the last category is deleted
+watch(
+  () => categoryStore.categories.length,
+  (newLen, oldLen) => {
+    if (oldLen > 0 && newLen === 0 && dashboardPillRef.value?.stopShine) {
+      dashboardPillRef.value.stopShine();
+    }
+  }
+);
+
+
+const addCategory = async (categoryName) => {
+  try {
+    const wasEmpty = categoryStore.categories.length === 0;
+    await categoryStore.addCategory({
+      name: categoryName.trim(),
+      is_visible: true
+    });
+    // If there are no prayers, trigger shine on every category add
+    if (prayerStore.prayers.length === 0 && dashboardPillRef.value?.shine) {
+      setTimeout(() => {
+        dashboardPillRef.value.shine();
+      }, 300); // slight delay for smoothness
+    }
+    // Close the modal
+    showAddModal.value = false;
+  } catch (error) {
+    console.error('Failed to add category', error);
+  }
 };
 
 const startEdit = (category) => {
-  // Store currently edited category id
   editingId.value = category.id;
-  // The actual editing name is managed by the CategoryItem component
 };
 
 const updateCategory = async (id, newName) => {
@@ -382,4 +403,6 @@ onMounted(async () => {
     linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
 }
+
+
 </style>
