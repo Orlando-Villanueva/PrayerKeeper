@@ -12,7 +12,7 @@
       <!-- Dashboard Header -->
       <PageHeader title="Prayer Dashboard" subtitle="Keep track of your prayer requests and celebrations">
         <template #actions>
-          <ActionPill to="/manage-categories">
+          <ActionPill to="/manage-categories" class="min-w-[180px] justify-center">
             <template #icon>
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
@@ -33,8 +33,30 @@
       <!-- Error State -->
       <ErrorState v-else-if="prayerStore.error" :message="prayerStore.error" @dismiss="prayerStore.resetError" />
 
+      <!-- Welcome Card for New Users -->
+      <div v-if="!isInitialLoading && !prayerStore.error && categoryStore.sortedVisibleCategories.length === 0" 
+           class="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-6 sm:p-8 border border-purple-100/50 transition-all duration-300 hover:shadow-xl hover:bg-white/90 mb-6 sm:mb-10">
+        <div class="flex flex-col items-center text-center sm:flex-row sm:text-left sm:items-start gap-5">
+          <div class="bg-purple-100 rounded-full p-4 flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-xl font-medium text-purple-900 mb-2 tracking-tight">Welcome to Prayer Keeper</h2>
+            <p class="text-gray-700 mb-4">Start by creating your first prayer category. Categories help organize your prayers by groups like "Family", "Friends", or "Church".</p>
+            <BaseButton variant="primary" size="medium" @click="navigateToCategories" class="mt-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Create Your First Category
+            </BaseButton>
+          </div>
+        </div>
+      </div>
+
       <!-- Prayer Grid -->
-      <div v-else class="grid grid-cols-1 gap-6 sm:gap-10 md:grid-cols-2">
+      <div v-else-if="!isInitialLoading && !prayerStore.error" class="grid grid-cols-1 gap-6 sm:gap-10 md:grid-cols-2">
         <template v-for="category in categoryStore.sortedVisibleCategories" :key="category.id">
           <PrayerList :title="category.name" :category-id="category.id"
             header-class="bg-gradient-to-r from-purple-300 to-purple-200 border-b border-purple-300/70"
@@ -56,6 +78,7 @@
 <script setup>
 // Imports
 import { ref, provide, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { usePrayerStore } from '../stores/prayerStore';
 import { useCategoryStore } from '../stores/categoryStore';
 import NavBar from './navbar/NavBar.vue';
@@ -66,10 +89,12 @@ import PageHeader from './ui/PageHeader.vue';
 import LoadingState from './ui/LoadingState.vue';
 import ErrorState from './ui/ErrorState.vue';
 import ActionPill from './ui/ActionPill.vue';
+import BaseButton from './ui/BaseButton.vue';
 
 // Store initialization
 const prayerStore = usePrayerStore();
 const categoryStore = useCategoryStore();
+const router = useRouter();
 
 // State management
 const isInitialLoading = ref(true);
@@ -125,6 +150,11 @@ const deletePrayer = async (prayer) => {
     // Don't await to avoid loading state
     prayerStore.deletePrayer(prayer.id);
   }
+};
+
+// Navigation function for empty state
+const navigateToCategories = () => {
+  router.push('/manage-categories');
 };
 
 // Provide functions to child components
