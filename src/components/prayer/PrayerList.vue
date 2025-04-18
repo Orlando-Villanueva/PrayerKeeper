@@ -64,7 +64,7 @@
         enter-to-class="opacity-100 translate-x-0 scale-100" leave-from-class="opacity-100 translate-x-0 scale-100"
         leave-to-class="opacity-0 -translate-x-8 scale-95" move-class="transition-transform duration-500">
         <li v-for="prayer in prayers" :key="prayer.id"
-          class="py-1.5 group hover:bg-purple-50/50 rounded-lg px-1 mx-1 my-0.5">
+          class="py-2 sm:py-4 group hover:bg-purple-50/50 rounded-lg px-2">
           <div class="flex flex-wrap sm:flex-nowrap items-start sm:items-center justify-between gap-2">
             <div class="flex-1 min-w-0 mb-1 sm:mb-0">
               <p class="text-base font-semibold text-gray-900 tracking-wide"

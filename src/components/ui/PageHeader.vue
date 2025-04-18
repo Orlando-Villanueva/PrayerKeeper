@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center mb-6 sm:mb-12">
+  <div class="text-center mb-6 sm:mb-8">
     <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white drop-shadow-lg">{{ title }}</h1>
     <p v-if="subtitle" class="mt-2 sm:mt-3 text-base sm:text-lg tracking-wide text-white/90 drop-shadow font-medium">
       {{ subtitle }}
