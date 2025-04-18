@@ -87,7 +87,7 @@
                   'border-purple-300 bg-purple-50/30 shadow-md': editingId === category.id
                 }" @dragover.prevent @dragenter.prevent="handleDragEnter($event, category.id)"
                 @drop="handleDrop($event, category.id)">
-                <div class="p-3 sm:p-4 flex items-center justify-between flex-1">
+                <div class="p-3 sm:p-4 flex items-center justify-between flex-1" :class="{ 'bg-purple-50/30': editingId === category.id }">
 
                   <!-- Drag Handle (Desktop) -->
                   <div
@@ -130,7 +130,7 @@
                   <!-- Category Name (View/Edit Mode) -->
                   <div class="flex-1 flex items-center min-h-[48px]">
                     <!-- Category Name with Prayer Count -->
-                    <div class="flex-grow ml-3 md:ml-4 flex items-center gap-3">
+                    <div class="flex-grow ml-3 md:ml-4 flex items-center gap-3" :class="{ 'pr-3 md:pr-4': editingId === category.id }">
                       <!-- View Mode -->
                       <template v-if="!editingId || editingId !== category.id">
                         <span class="text-gray-900 font-medium">{{ category.name }}</span>
@@ -145,7 +145,7 @@
                       <!-- Edit Mode -->
                       <div v-else class="w-full">
                         <input type="text" v-model="editingName"
-                          class="w-full border-purple-300 rounded-md shadow-sm focus:border-purple-400 focus:ring focus:ring-purple-200 focus:ring-opacity-50 py-2 px-3 bg-purple-50/70"
+                          class="w-full border-2 border-purple-400 rounded-md shadow-md focus:border-purple-400 focus:ring-0 py-2 px-3 bg-purple-50/90 text-purple-900 font-medium"
                           @keyup.enter="updateCategory(category.id)" @keyup.esc="cancelEdit" ref="editInput" />
                       </div>
                     </div>
@@ -153,9 +153,9 @@
 
                   <!-- Actions -->
                   <div
-                    class="flex items-center space-x-2 opacity-70 group-hover:opacity-100 transition-opacity duration-200">
-                    <!-- Toggle Visibility Button -->
-                    <BaseActionButton @click="toggleVisibility(category.id)" variant="default"
+                    class="flex items-center space-x-3 mr-3 md:mr-4 opacity-80 group-hover:opacity-100 transition-opacity duration-200"  :class="{ 'ml-2': editingId === category.id }">
+                    <!-- Toggle Visibility Button (hidden in edit mode) -->
+                    <BaseActionButton v-if="!editingId || editingId !== category.id" @click="toggleVisibility(category.id)" variant="default"
                       :title="category.is_visible ? 'Hide category' : 'Show category'">
                       <svg v-if="category.is_visible" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                         viewBox="0 0 24 24" stroke="currentColor">
@@ -181,15 +181,24 @@
                       </svg>
                     </BaseActionButton>
                     <BaseActionButton v-else @click="updateCategory(category.id)" variant="success" title="Save changes"
-                      class="bg-white shadow-sm">
+                      class="bg-white shadow-sm border border-green-200 hover:bg-green-50 scale-110 transition-all duration-200">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                       </svg>
                     </BaseActionButton>
 
-                    <!-- Delete Button -->
-                    <BaseActionButton @click="deleteCategory(category)" variant="danger" title="Delete category">
+                    <!-- Cancel Button (only in edit mode) -->
+                    <BaseActionButton v-if="editingId === category.id" @click="cancelEdit" variant="default" title="Cancel editing"
+                      class="bg-white shadow-sm border border-purple-200 hover:bg-purple-50 scale-110 transition-all duration-200">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </BaseActionButton>
+
+                    <!-- Delete Button (hidden in edit mode) -->
+                    <BaseActionButton v-if="!editingId || editingId !== category.id" @click="deleteCategory(category)" variant="danger" title="Delete category">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -223,7 +232,10 @@
               fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
             </svg>
-            <span><strong>Drag</strong> categories to reorder them on your dashboard.</span>
+            <span><strong>Reorder</strong> categories to customize your dashboard: <span class="hidden sm:inline">drag
+                and
+                drop</span><span class="sm:hidden">tap "Reorder" and use arrow buttons</span> to change their
+              position.</span>
           </li>
           <li class="flex items-start">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500 mr-3 mt-0.5 flex-shrink-0"
@@ -250,9 +262,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
-            <span><strong>Delete</strong> categories you no longer need. Note that prayers in deleted categories will
-              need to
-              be reassigned.</span>
+            <span><strong>Delete</strong> categories you no longer need. Categories containing prayers cannot be deleted.</span>
           </li>
         </ul>
       </div>
@@ -310,8 +320,11 @@ const addCategory = async (categoryName) => {
 const startEdit = (category) => {
   editingId.value = category.id;
   editingName.value = category.name;
+  
   nextTick(() => {
-    if (editInput.value) editInput.value.focus();
+    if (editInput.value) {
+      editInput.value.focus();
+    }
   });
 };
 
