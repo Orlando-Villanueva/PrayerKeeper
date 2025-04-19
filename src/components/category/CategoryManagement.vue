@@ -62,12 +62,14 @@
         <div v-if="!categoryStore.categories.length">
           <!-- Empty state is handled by the subtitle slot -->
         </div>
-        <div v-else-if="categoryStore.sortedCategories.length > 0" class="overflow-hidden py-2">
+        <div v-else-if="categoryStore.sortedCategories.length > 0" class="overflow-visible py-2">
           <TransitionGroup tag="ul" name="list" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5"
-            enter-from-class="opacity-0 -translate-x-8 scale-95"
+            enter-from-class="opacity-0 -translate-x-8"
             enter-active-class="transition-all duration-300 ease-out"
-            enter-to-class="opacity-100 translate-x-0 scale-100" leave-from-class="opacity-100 translate-x-0 scale-100"
-            leave-to-class="opacity-0 -translate-x-8 scale-95" move-class="transition-transform duration-500">
+            enter-to-class="opacity-100 translate-x-0" leave-from-class="opacity-100 translate-x-0"
+            leave-to-class="opacity-0 -translate-x-8" move-class="transition-transform duration-500"
+            @after-leave="onCategoriesLeave">
+
             <CategoryItem v-for="category in categoryStore.sortedCategories" :key="category.id" :category="category"
               :editing-id="editingId" :is-reorder-mode="isReorderMode" :category-index="getCategoryIndex(category.id)"
               :total-categories="categoryStore.sortedCategories.length" @update="updateCategory"
@@ -79,19 +81,21 @@
 
         <!-- Bottom reorder button area - when not in reorder mode -->
         <template #footer>
-          <div v-if="categoryStore.categories.length > 1 && !isReorderMode"
-            class="pb-3 px-4 flex justify-center sm:hidden">
-            <button
-              class="w-full bg-white rounded-lg py-3 text-gray-700 font-medium flex items-center justify-center shadow-sm border border-gray-200 hover:bg-gray-50 active:scale-[0.98] transition-all duration-150"
-              @click="toggleReorderMode">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-              </svg>
-              Reorder
-            </button>
-          </div>
+          <transition name="fade-slide" appear>
+            <div v-if="categoryStore.categories.length > 1 && !isReorderMode && showReorderButton"
+              class="pb-3 px-4 flex justify-center sm:hidden">
+              <button
+                class="w-full bg-white rounded-lg py-3 text-gray-700 font-medium flex items-center justify-center shadow-sm border border-gray-200 hover:bg-gray-50 active:scale-[0.98] transition-all duration-150"
+                @click="toggleReorderMode">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                </svg>
+                Reorder
+              </button>
+            </div>
+          </transition>
         </template>
       </BaseCard>
 
@@ -209,6 +213,8 @@ const showAddModal = ref(false);
 const isInitialLoading = ref(false);
 const isPrayersLoading = ref(false);
 const isReorderMode = ref(false);
+const showReorderButton = ref(true);
+
 const draggedCategoryId = ref(null);
 const deleteError = ref(null);
 
@@ -285,6 +291,9 @@ const toggleVisibility = async (id) => {
 // Mobile reordering functions
 const toggleReorderMode = () => {
   isReorderMode.value = !isReorderMode.value;
+  if (isReorderMode.value) {
+    showReorderButton.value = false;
+  }
 };
 
 const getCategoryIndex = (id) => {
@@ -404,7 +413,40 @@ onMounted(async () => {
     });
   });
 });
+// Show Reorder button after categories leave (fallback)
+function onCategoriesLeave() {
+  if (!isReorderMode.value) {
+    setTimeout(() => {
+      showReorderButton.value = true;
+    }, 10);
+  }
+}
+
+// Ensure Reorder button returns after exiting reorder mode
+watch(isReorderMode, (newVal, oldVal) => {
+  if (oldVal && !newVal) {
+    setTimeout(() => {
+      showReorderButton.value = true;
+    }, 320); // Match transition duration
+  }
+});
+
 </script>
+
+<style scoped>
+.fade-slide-enter-active, .fade-slide-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+.fade-slide-enter-from, .fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(16px);
+}
+.fade-slide-enter-to, .fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+
 
 <style scoped>
 /* Add subtle grid pattern to background */
