@@ -31,83 +31,93 @@
 
       <!-- Error State -->
       <ErrorState v-if="categoryStore.error" :message="categoryStore.error" @dismiss="categoryStore.resetError" />
-<ErrorState v-if="deleteError" :message="deleteError" @dismiss="deleteError = null" />
+      <ErrorState v-if="deleteError" :message="deleteError" @dismiss="deleteError = null" />
 
       <!-- Category Management -->
-      <div v-else
-        class="bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-sm rounded-xl shadow-xl border border-purple-100/50 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:translate-y-[-1px] hover:border-purple-200 mb-6 sm:mb-10">
+      <BaseCard v-else title="Your Categories"
+        headerClass="bg-gradient-to-r from-purple-300 to-purple-200 border-b border-purple-300/70"
+        class="mb-6 sm:mb-10">
 
-        <!-- Category List Header -->
-        <div class="px-3 md:px-4 py-3 bg-gradient-to-r from-purple-300 to-purple-200 border-b border-purple-300/70">
-          <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-2 sm:mb-0 gap-3">
-            <h2 class="text-xl font-bold tracking-tight text-gray-900 sm:mt-1">Your Categories</h2>
-            <div class="flex gap-3" :class="{ 'w-full sm:w-auto': isReorderMode }">
-              <BaseButton 
-                v-if="categoryStore.categories.length > 1" 
-                variant="secondary" 
-                size="small"
-                class="text-sm flex items-center justify-center px-4 py-2 border border-purple-200 shadow-sm active:bg-purple-50 active:scale-[0.98] transition-all duration-150 sm:hidden flex-1"
-                @click="toggleReorderMode">
-                <template v-if="!isReorderMode">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                  </svg>
-                  Reorder
-                </template>
-                <template v-else>
-                  Done
-                </template>
-              </BaseButton>
-              <BaseButton 
-                variant="primary" 
-                size="small"
-                class="text-sm flex items-center justify-center px-4 py-2 bg-purple-500 hover:bg-purple-600 active:bg-purple-700 active:scale-[0.98] text-white transition-all duration-150 flex-1 sm:flex-auto"
-                @click="openAddModal">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Add Category
-              </BaseButton>
-            </div>
-          </div>
-          <p v-if="!categoryStore.categories.length" class="text-gray-600 italic mb-4">
+        <!-- Subtitle slot -->
+        <template #subtitle>
+          <p v-if="!categoryStore.categories.length" class="text-gray-600 italic">
             You don't have any categories yet. Add your first category above.
           </p>
+        </template>
 
-          <div v-else-if="categoryStore.sortedCategories.length > 0" class="overflow-hidden py-2 sm:pt-5">
-            <TransitionGroup tag="ul" name="list" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5"
-              enter-from-class="opacity-0 -translate-x-8 scale-95"
-              enter-active-class="transition-all duration-300 ease-out"
-              enter-to-class="opacity-100 translate-x-0 scale-100"
-              leave-from-class="opacity-100 translate-x-0 scale-100" leave-to-class="opacity-0 -translate-x-8 scale-95"
-              move-class="transition-transform duration-500">
-              <CategoryItem 
-                v-for="category in categoryStore.sortedCategories" 
-                :key="category.id"
-                :category="category"
-                :editing-id="editingId"
-                :is-reorder-mode="isReorderMode"
-                :category-index="getCategoryIndex(category.id)"
-                :total-categories="categoryStore.sortedCategories.length"
-                @update="updateCategory"
-                @toggle-visibility="toggleVisibility"
-                @delete="deleteCategory"
-                @drag-start="startDrag"
-                @drag-enter="handleDragEnter"
-                @drop="handleDrop"
-                @edit="startEdit"
-                @cancel-edit="cancelEdit"
-                @move="moveCategory"
-                @delete-error="showDeleteError"
-              />
-            </TransitionGroup>
+        <!-- Action slot with Add/Done Button based on mode -->
+        <template #action>
+          <BaseButton @click="openAddModal" variant="primary"
+            class="shadow-md hover:shadow-lg transition-all duration-200 hover:translate-y-[-1px] self-start flex-shrink-0 px-3 py-1.5 bg-purple-600 text-white">
+            <span class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              Add Category
+            </span>
+          </BaseButton>
+        </template>
+
+        <div v-if="!categoryStore.categories.length">
+          <!-- Empty state is handled by the subtitle slot -->
+        </div>
+        <div v-else-if="categoryStore.sortedCategories.length > 0" class="overflow-hidden py-2">
+          <TransitionGroup tag="ul" name="list" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5"
+            enter-from-class="opacity-0 -translate-x-8 scale-95"
+            enter-active-class="transition-all duration-300 ease-out"
+            enter-to-class="opacity-100 translate-x-0 scale-100" leave-from-class="opacity-100 translate-x-0 scale-100"
+            leave-to-class="opacity-0 -translate-x-8 scale-95" move-class="transition-transform duration-500">
+            <CategoryItem v-for="category in categoryStore.sortedCategories" :key="category.id" :category="category"
+              :editing-id="editingId" :is-reorder-mode="isReorderMode" :category-index="getCategoryIndex(category.id)"
+              :total-categories="categoryStore.sortedCategories.length" @update="updateCategory"
+              @toggle-visibility="toggleVisibility" @delete="deleteCategory" @drag-start="startDrag"
+              @drag-enter="handleDragEnter" @drop="handleDrop" @edit="startEdit" @cancel-edit="cancelEdit"
+              @move="moveCategory" @delete-error="showDeleteError" />
+          </TransitionGroup>
+        </div>
+
+        <!-- Bottom reorder button area - when not in reorder mode -->
+        <template #footer>
+          <div v-if="categoryStore.categories.length > 1 && !isReorderMode"
+            class="pb-3 px-4 flex justify-center sm:hidden">
+            <button
+              class="w-full bg-white rounded-lg py-3 text-gray-700 font-medium flex items-center justify-center shadow-sm border border-gray-200 hover:bg-gray-50 active:scale-[0.98] transition-all duration-150"
+              @click="toggleReorderMode">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+              </svg>
+              Reorder
+            </button>
+          </div>
+        </template>
+      </BaseCard>
+
+      <!-- Floating reorder mode action bar -->
+      <transition enter-active-class="transform transition ease-out duration-300"
+        enter-from-class="opacity-0 translate-y-4" enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transform transition ease-in duration-200" leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 translate-y-4">
+        <div v-if="isReorderMode" class="fixed bottom-0 inset-x-0 z-50 pb-safe">
+          <div
+            class="bg-gradient-to-r from-purple-600 to-purple-500 shadow-lg border-t border-purple-400/30 px-4 py-3 flex items-center justify-between">
+            <div class="text-white font-medium flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+              </svg>
+              <span>Reorder Mode</span>
+            </div>
+            <BaseButton variant="secondary"
+              class="bg-white/90 hover:bg-white text-purple-700 border-white/70 backdrop-blur-sm font-semibold px-5 py-2"
+              @click="toggleReorderMode">
+              Done
+            </BaseButton>
           </div>
         </div>
-      </div>
+      </transition>
 
       <!-- Instructions Card -->
       <div
@@ -158,7 +168,8 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
-            <span><strong>Delete</strong> categories you no longer need. Categories containing prayers cannot be deleted.</span>
+            <span><strong>Delete</strong> categories you no longer need. Categories containing prayers cannot be
+              deleted.</span>
           </li>
         </ul>
       </div>
@@ -182,6 +193,7 @@ import ErrorState from '../ui/ErrorState.vue';
 import BaseButton from '../ui/BaseButton.vue';
 import BaseActionButton from '../ui/BaseActionButton.vue';
 import ActionPill from '../ui/ActionPill.vue';
+import BaseCard from '../ui/BaseCard.vue';
 import CategoryModal from './CategoryModal.vue';
 import CategoryItem from './CategoryItem.vue';
 
@@ -401,6 +413,4 @@ onMounted(async () => {
     linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
 }
-
-
 </style>
