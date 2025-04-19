@@ -35,7 +35,8 @@
       </BaseButton>
     </template>
     <TransitionGroup v-show="showPrayers" tag="ul" class="divide-y divide-purple-100 -mx-1"
-      enter-active-class="transition-all duration-[${TRANSITION_DURATION}] ease-out" leave-active-class="transition-all duration-[${TRANSITION_DURATION}] ease-in"
+      enter-active-class="transition-all duration-[${TRANSITION_DURATION}] ease-out"
+      leave-active-class="transition-all duration-[${TRANSITION_DURATION}] ease-in"
       enter-from-class="opacity-0 -translate-x-8 scale-95" enter-to-class="opacity-100 translate-x-0 scale-100"
       leave-from-class="opacity-100 translate-x-0 scale-100" leave-to-class="opacity-0 -translate-x-8 scale-95"
       move-class="transition-transform duration-[${TRANSITION_DURATION}]">
@@ -56,20 +57,19 @@
                 Resolved
               </span>
             </div>
-            <p v-if="prayer.note" class="mt-1 text-sm text-gray-600 leading-relaxed"
-              :class="{ 'line-through text-gray-400': prayer.resolved }">
-              {{ prayer.note }}
-            </p>
           </div>
           <div class="flex space-x-2 opacity-70 group-hover:opacity-100 transition-opacity duration-200 ml-1">
             <BaseActionButton @click="prayerActions.toggleResolved(prayer)" variant="success"
               :title="prayer.resolved ? 'Mark as unresolved' : 'Mark as resolved'">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
+              <svg v-if="!prayer.resolved" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19a7 7 0 10-7-7v4m0 0l-4-4m4 4l4-4" />
+</svg>
             </BaseActionButton>
-            <BaseActionButton @click="openEditModal(prayer)" variant="primary" title="Edit prayer">
+            <BaseActionButton @click="openEditModFal(prayer)" variant="primary" title="Edit prayer">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -85,16 +85,16 @@
             </BaseActionButton>
           </div>
         </div>
+        <p v-if="prayer.note" class="mt-2 text-sm text-gray-600 leading-relaxed"
+          :class="{ 'line-through text-gray-400': prayer.resolved }">
+          {{ prayer.note }}
+        </p>
       </li>
     </TransitionGroup>
 
-    <Transition
-      enter-active-class="transition-opacity duration-[${TRANSITION_DURATION}] ease-out"
-      leave-active-class="transition-opacity duration-[${TRANSITION_DURATION}] ease-in"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0">
+    <Transition enter-active-class="transition-opacity duration-[${TRANSITION_DURATION}] ease-out"
+      leave-active-class="transition-opacity duration-[${TRANSITION_DURATION}] ease-in" enter-from-class="opacity-0"
+      enter-to-class="opacity-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
       <div v-if="showEmptyState" class="text-center py-5 px-2">
         <div class="rounded-xl max-w-xs mx-auto">
           <div
@@ -107,7 +107,7 @@
           </div>
           <h3 class="text-base font-semibold text-gray-800 mb-1">No prayers yet</h3>
           <p class="text-gray-600 mb-2 text-sm">Add your first prayer and start making a difference.</p>
-          
+
         </div>
       </div>
     </Transition>
