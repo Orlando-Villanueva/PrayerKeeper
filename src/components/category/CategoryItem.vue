@@ -162,6 +162,7 @@
           v-if="!isEditing" 
           @click="handleDelete"
           variant="danger" 
+          :disabled="prayerCount > 0"
           :title="prayerCount > 0 ? 'Cannot delete: contains prayers' : 'Delete category'"
           :class="{ 'opacity-40 cursor-not-allowed': prayerCount > 0 }"
         >
