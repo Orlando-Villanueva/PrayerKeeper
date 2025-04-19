@@ -110,6 +110,17 @@ export const useAuthStore = defineStore('auth', {
 
                 this.user = null;
                 this.session = null;
+                
+                // Reset other stores to clear previous user's data
+                const { useCategoryStore } = await import('./categoryStore');
+                const { usePrayerStore } = await import('./prayerStore');
+                
+                const categoryStore = useCategoryStore();
+                const prayerStore = usePrayerStore();
+                
+                // Clear all data from stores
+                categoryStore.resetStore();
+                prayerStore.resetStore();
 
                 return { success: true };
             } catch (error) {
