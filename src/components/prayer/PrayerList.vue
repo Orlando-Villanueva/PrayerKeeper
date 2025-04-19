@@ -89,33 +89,25 @@
     </TransitionGroup>
 
     <Transition
-      enter-active-class="transition-all duration-[${TRANSITION_DURATION}] ease-out"
-      leave-active-class="transition-all duration-[${TRANSITION_DURATION}] ease-in"
-      enter-from-class="opacity-0 scale-95"
-      enter-to-class="opacity-100 scale-100"
-      leave-from-class="opacity-100 scale-100"
-      leave-to-class="opacity-0 scale-95">
-      <div v-if="showEmptyState" class="text-center py-10 px-4">
-        <div class="bg-white/90 backdrop-blur-sm rounded-xl p-5 max-w-md mx-auto shadow-lg border border-white/20">
+      enter-active-class="transition-opacity duration-[${TRANSITION_DURATION}] ease-out"
+      leave-active-class="transition-opacity duration-[${TRANSITION_DURATION}] ease-in"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0">
+      <div v-if="showEmptyState" class="text-center py-5 px-2">
+        <div class="rounded-xl max-w-xs mx-auto">
           <div
-            class="bg-gradient-to-br from-purple-500 to-purple-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24"
+            class="bg-gradient-to-br from-purple-500 to-purple-700 w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 shadow">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </div>
-          <h3 class="text-lg font-bold text-gray-800 mb-2">No prayers added yet</h3>
-          <p class="text-gray-600 mb-4">Start praying and make a difference in someone's life.</p>
-          <BaseButton @click="openAddModal" variant="primary" class="mx-auto">
-            <template #icon>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-              </svg>
-            </template>
-            Add Your First Prayer
-          </BaseButton>
+          <h3 class="text-base font-semibold text-gray-800 mb-1">No prayers yet</h3>
+          <p class="text-gray-600 mb-2 text-sm">Add your first prayer and start making a difference.</p>
+          
         </div>
       </div>
     </Transition>
@@ -203,34 +195,27 @@ onUnmounted(() => {
 watch(
   () => prayers.value.length,
   (newLength) => {
+    // Always clear any pending timeouts at the start
+    if (showPrayersTimeout) {
+      clearTimeout(showPrayersTimeout);
+      showPrayersTimeout = null;
+    }
+    if (emptyStateTimeout) {
+      clearTimeout(emptyStateTimeout);
+      emptyStateTimeout = null;
+    }
+
     if (newLength === 0) {
-      // Allow time for the last prayer to animate out (500ms) before hiding prayer list
-      if (showPrayersTimeout) {
-        clearTimeout(showPrayersTimeout);
-        showPrayersTimeout = null;
-      }
+      // Immediately show the empty state and keep it visible
+      showEmptyState.value = true;
+      // Animate out the prayer list only
       showPrayersTimeout = setTimeout(() => {
         showPrayers.value = false;
-        // Then wait before showing empty state
-        emptyStateTimeout = setTimeout(() => {
-          showEmptyState.value = true;
-        }, TRANSITION_DURATION); // Uses animation constant
-      }, TRANSITION_DURATION); // Wait for leave animation to complete (uses animation constant)
+      }, TRANSITION_DURATION);
     } else {
-      // First show the prayers (especially important for the first prayer)
+      // Immediately show the prayers and hide the empty state
       showPrayers.value = true;
-      
-      // When going from 0 to 1 prayer, let the empty state remain briefly
-      // This prevents the empty gap while waiting for prayers to appear
-      if (emptyStateTimeout) {
-        clearTimeout(emptyStateTimeout);
-        emptyStateTimeout = null;
-      }
-      
-      // Delay hiding the empty state until the prayer is starting to appear
-      emptyStateTimeout = setTimeout(() => {
-        showEmptyState.value = false;
-      }, 250);
+      showEmptyState.value = false;
     }
   },
   { immediate: true }
