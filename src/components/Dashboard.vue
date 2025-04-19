@@ -146,7 +146,7 @@ const toggleResolved = async (prayer) => {
 };
 
 const deletePrayer = async (prayer) => {
-  if (confirm('Are you sure you want to delete this prayer?')) {
+  if (confirm('Are you sure you want to delete this prayer? This action cannot be undone.')) {
     // Don't await to avoid loading state
     prayerStore.deletePrayer(prayer.id);
   }
