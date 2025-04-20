@@ -4,7 +4,7 @@
     :disabled="disabled || loading"
     :form="form"
     @click="$emit('click', $event)"
-    class="inline-flex items-center justify-center px-4 py-2.5 border rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 hover:cursor-pointer transform hover:translate-y-[-1px] hover:shadow-lg"
+    class="inline-flex items-center justify-center px-4 py-2.5 border rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 hover:cursor-pointer transform hover:translate-y-[-1px] hover:shadow-lg active:scale-[0.98] active:shadow-md"
     :class="buttonClasses"
   >
     <!-- Loading spinner -->
@@ -50,10 +50,10 @@ const props = defineProps({
 
 const buttonClasses = computed(() => {
   const classes = {
-    primary: 'border-transparent bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-500 shadow-md disabled:opacity-50 disabled:cursor-not-allowed',
-    secondary: 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-purple-500 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed',
-    danger: 'border-transparent bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-md disabled:opacity-50 disabled:cursor-not-allowed',
-    ghost: 'border-gray-200/50 bg-transparent text-gray-600 hover:text-gray-700 hover:bg-gray-50/50 focus:ring-gray-400 shadow-none disabled:opacity-50 disabled:cursor-not-allowed',
+    primary: 'border-transparent bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800 focus:ring-purple-500 shadow-md disabled:opacity-50 disabled:cursor-not-allowed',
+    secondary: 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 focus:ring-purple-500 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed',
+    danger: 'border-transparent bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus:ring-red-500 shadow-md disabled:opacity-50 disabled:cursor-not-allowed',
+    ghost: 'border-gray-200/50 bg-transparent text-gray-600 hover:text-gray-700 hover:bg-gray-50/50 active:bg-gray-100/70 active:text-gray-800 focus:ring-gray-400 shadow-none disabled:opacity-50 disabled:cursor-not-allowed',
   };
   
   return classes[props.variant];
